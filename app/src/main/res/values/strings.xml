@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">YourHealth</string>
+    <string name="emergency_notification_message">EMERGENCY!!! Heartbeat abnormal</string>
+</resources>
