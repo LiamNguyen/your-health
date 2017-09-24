@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
 import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
+import fi.letsdev.yourhealth.utils.NotificationAlertManager;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 
 public class MainActivity extends Activity implements InterfaceRefresher {
@@ -33,6 +34,13 @@ public class MainActivity extends Activity implements InterfaceRefresher {
 			public void onClick(View view) {
 				String channel = PreferencesManager.getInstance(getApplicationContext()).loadChannel();
 				OrtcHandler.getInstance().sendNotification(channel);
+			}
+		});
+
+		findViewById(R.id.btn_stopAlert).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				NotificationAlertManager.getInstance(getApplicationContext()).stopAlert();
 			}
 		});
 	}
