@@ -1,4 +1,24 @@
 <resources>
     <string name="app_name">YourHealth</string>
+
+    <!--MESSAGES-->
     <string name="emergency_notification_message">EMERGENCY!!! Heartbeat abnormal</string>
+    <string name="message_welcome">Your health</string>
+    <string name="message_role_choice">Are you a patient or a patient\'s family member?</string>
+    <string name="message_watcher_hint">Please type here the patient\'s code in order to subscribe to emergency alert</string>
+    <string name="message_watcher_already_subscribe">You have been subscribed for notification alert</string>
+
+    <!--BUTTONS-->
+    <string name="btn_patient">Patient</string>
+    <string name="btn_familyMember">Family member</string>
+    <string name="btn_startSubscribing">Subscribe for emergency alert</string>
+    <string name="btn_unsubscribe">Unsubscribe</string>
+    <string name="btn_stopAlert">Stop</string>
+
+    <!--MENU ITEM TITLE-->
+    <string name="menuItem_rechooseRole">Rechoose role</string>
+
+    <!--PLACEHOLDERS-->
+    <string name="placeHolder_patientCode">Patient\'s code</string>
+
 </resources>

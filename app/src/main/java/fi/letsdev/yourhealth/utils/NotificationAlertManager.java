@@ -17,7 +17,7 @@ public class NotificationAlertManager {
 
 	private NotificationAlertManager(Context context) {
 		this.context = context;
-		alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+		alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 	}
 
 	public static NotificationAlertManager getInstance(Context context) {
@@ -28,6 +28,13 @@ public class NotificationAlertManager {
 	}
 
 	public void startAlert() {
+		if (isPlaying()) return;
+
+		if (mMediaPlayer != null) {
+			mMediaPlayer.start();
+			return;
+		}
+
 		try {
 			mMediaPlayer = new MediaPlayer();
 			mMediaPlayer.setDataSource(context, alert);
@@ -48,7 +55,12 @@ public class NotificationAlertManager {
 		mMediaPlayer.start();
 	}
 
+	public Boolean isPlaying() {
+		return mMediaPlayer != null && mMediaPlayer.isPlaying();
+	}
+
 	public void stopAlert() {
+		if (mMediaPlayer == null) return;
 		mMediaPlayer.stop();
 		mMediaPlayer = null;
 	}

@@ -2,61 +2,77 @@ package fi.letsdev.yourhealth;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import fi.letsdev.yourhealth.fragments.RingWearerSetupFragment;
+import fi.letsdev.yourhealth.fragments.WatcherSetupFragment;
+import fi.letsdev.yourhealth.fragments.WelcomeFragment;
 import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
 import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
+import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.NotificationAlertManager;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 
-public class MainActivity extends Activity implements InterfaceRefresher {
+public class MainActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		String channel = PreferencesManager.getInstance(getApplicationContext()).loadChannel();
-
-		OrtcHandler.getInstance().prepareClient(getApplicationContext(), this);
-		OrtcHandler.getInstance().channel = this;
-
-		if (channel == null) {
-			PreferencesManager.getInstance(getApplicationContext()).saveChannel("TestChannel");
-		}
-		OrtcHandler.getInstance().subscribeChannel(
-			PreferencesManager.getInstance(getApplicationContext()).loadChannel()
-		);
-
-		findViewById(R.id.btn_alert).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				String channel = PreferencesManager.getInstance(getApplicationContext()).loadChannel();
-				OrtcHandler.getInstance().sendNotification(channel);
-			}
-		});
-
-		findViewById(R.id.btn_stopAlert).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				NotificationAlertManager.getInstance(getApplicationContext()).stopAlert();
-			}
-		});
+		navigate(savedInstanceState);
 	}
 
-	@Override
-	public void refreshData(final String message) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				String displayText = message == null
-					? "ORTC is connected"
-					: message;
+	private void navigate(Bundle savedInstanceState) {
+		Constants.UserRole userRole =
+			PreferencesManager.getInstance(getApplicationContext()).loadUserRole();
 
-				TextView connectionStatus = (TextView) findViewById(R.id.txt_connectionStatus);
-				connectionStatus.setText(displayText);
+		if (savedInstanceState == null) {
+			switch (userRole) {
+				case PATIENT:
+					getSupportFragmentManager()
+						.beginTransaction()
+						.add(R.id.main_frameLayout, new RingWearerSetupFragment())
+						.commit();
+					break;
+				case WATCHER:
+					getSupportFragmentManager()
+						.beginTransaction()
+						.add(R.id.main_frameLayout, new WatcherSetupFragment())
+						.commit();
+					break;
+				case NOT_SET:
+					getSupportFragmentManager()
+						.beginTransaction()
+						.add(R.id.main_frameLayout, new WelcomeFragment())
+						.commit();
+					break;
 			}
-		});
+		}
+	}
+
+	public void onRechooseRole() {
+		getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.main_frameLayout, new WelcomeFragment())
+			.commit();
+	}
+
+	public void onUserChooseToBePatient() {
+		getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.main_frameLayout, new RingWearerSetupFragment())
+			.addToBackStack(null)
+			.commit();
+	}
+
+	public void onUserChooseToBeWatcher() {
+		getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.main_frameLayout, new WatcherSetupFragment())
+			.addToBackStack(null)
+			.commit();
 	}
 }

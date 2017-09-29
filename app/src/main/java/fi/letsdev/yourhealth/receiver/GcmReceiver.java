@@ -1,10 +1,13 @@
 package fi.letsdev.yourhealth.receiver;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -51,45 +54,49 @@ public class GcmReceiver extends GcmOrtcBroadcastReceiver {
 			}
 
 			try {
-//				NotificationManager notificationManager =
-//					(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//				Intent intent = new Intent(context, MainActivity.class);
-//
-//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//				PendingIntent pendingIntent =
-//					PendingIntent.getActivity(
-//						context,
-//						9999,
-//						intent,
-//						PendingIntent.FLAG_UPDATE_CURRENT
-//					);
-
-//				Notification notification =
-//					new NotificationCompat.Builder(context)
-//						.setContentTitle(channel)
-//						.setContentText(context.getString(R.string.emergency_notification_message))
-//						.setSmallIcon(R.drawable.ic_launcher)
-////						.setContentIntent(pendingIntent)
-//						.setAutoCancel(true)
-//						.build();
-//
-//				notificationManager.notify(getAppName(context), 9999, notification);
-
-				PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-					new Intent(context, MainActivity.class), 0);
-
-				NotificationCompat.Builder mBuilder =
-					new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_launcher)
-						.setContentTitle("My notification")
-						.setContentText("Hello World!");
-				mBuilder.setContentIntent(contentIntent);
-				mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-				mBuilder.setAutoCancel(true);
 				NotificationManager mNotificationManager =
 					(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-				mNotificationManager.notify(1, mBuilder.build());
 
+				if (Build.VERSION.SDK_INT < 26) {
+					PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+						new Intent(context, MainActivity.class), 0);
+
+					NotificationCompat.Builder mBuilder =
+						new NotificationCompat.Builder(context)
+							.setSmallIcon(R.drawable.ic_launcher)
+							.setContentTitle("ALERT!!!")
+							.setContentText(parsedMessage);
+					mBuilder.setContentIntent(contentIntent);
+					mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+					mBuilder.setAutoCancel(true);
+					mNotificationManager.notify(1, mBuilder.build());
+				} else {
+//					NotificationChannel notificationChannel = new NotificationChannel("default",
+//						"Channel name",
+//						NotificationManager.IMPORTANCE_DEFAULT
+//					);
+//					notificationChannel.setDescription("Channel description");
+//					mNotificationManager.createNotificationChannel(notificationChannel);
+
+					NotificationCompat.Builder mBuilder =
+						new NotificationCompat.Builder(context)
+							.setSmallIcon(R.drawable.ic_launcher)
+							.setContentTitle("ALERT!!!")
+							.setContentText(parsedMessage);
+
+					Intent resultIntent = new Intent(context, MainActivity.class);
+
+					TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+					stackBuilder.addParentStack(MainActivity.class);
+					stackBuilder.addNextIntent(resultIntent);
+					PendingIntent resultPendingIntent =
+						stackBuilder.getPendingIntent(
+							0,
+							PendingIntent.FLAG_UPDATE_CURRENT
+						);
+					mBuilder.setContentIntent(resultPendingIntent);
+					mNotificationManager.notify(1, mBuilder.build());
+				}
 
 				if (parsedMessage.equals(context.getString(R.string.emergency_notification_message)))
 					NotificationAlertManager.getInstance(context).startAlert();

@@ -1,6 +1,8 @@
 package fi.letsdev.yourhealth.realtimenotificationhandler;
 
 import android.content.Context;
+import android.nfc.Tag;
+import android.text.Html;
 import android.util.Log;
 
 import fi.letsdev.yourhealth.R;
@@ -79,12 +81,19 @@ public class OrtcHandler {
 			client.onConnected = new OnConnected() {
 				@Override
 				public void run(OrtcClient sender) {
+					selfHandler.isConnected = true;
+
 					String channel = PreferencesManager
 						.getInstance(selfHandler.context)
 						.loadChannel();
-					selfHandler.isConnected = true;
-					subscribeChannel(channel);
-					selfHandler.rootView.refreshData(null);
+
+					if (channel != null) {
+						subscribeChannel("TestChannel");
+						selfHandler.rootView.refreshData("Connected to push notification server");
+					} else {
+						Log.d(ORTC_TAG, "Channel has not been set to stored preference");
+						selfHandler.rootView.refreshData(null);
+					}
 				}
 			};
 

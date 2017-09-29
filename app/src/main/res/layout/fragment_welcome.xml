@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="fi.letsdev.yourhealth.fragments.WelcomeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txt_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:text="@string/message_welcome"/>
+
+        <TextView
+            android:id="@+id/txt_roleChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/txt_welcome"
+            android:layout_marginTop="180dp"
+            android:textSize="17sp"
+            android:text="@string/message_role_choice"/>
+
+        <Button
+            android:id="@+id/btn_patient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_roleChoice"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/btn_patient"/>
+
+        <Button
+            android:id="@+id/btn_familyMember"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_patient"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/btn_familyMember"/>
+
+
+    </RelativeLayout>
+
+</FrameLayout>
