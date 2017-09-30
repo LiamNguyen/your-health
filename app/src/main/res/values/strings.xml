@@ -7,6 +7,7 @@
     <string name="message_role_choice">Are you a patient or a patient\'s family member?</string>
     <string name="message_watcher_hint">Please type here the patient\'s code in order to subscribe to emergency alert</string>
     <string name="message_watcher_already_subscribe">You have been subscribed for notification alert</string>
+    <string name="message_invalid_channel">Patient\'s code is invalid. Please check again with the patient</string>
 
     <!--BUTTONS-->
     <string name="btn_patient">Patient</string>
@@ -20,5 +21,8 @@
 
     <!--PLACEHOLDERS-->
     <string name="placeHolder_patientCode">Patient\'s code</string>
+
+    <!--Field validation error-->
+    <string name="error_patientCodeEmtpy">Patient\'s code is empty</string>
 
 </resources>

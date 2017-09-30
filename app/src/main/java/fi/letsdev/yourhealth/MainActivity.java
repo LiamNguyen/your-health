@@ -1,18 +1,12 @@
 package fi.letsdev.yourhealth;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.widget.TextView;
 
 import fi.letsdev.yourhealth.fragments.RingWearerSetupFragment;
 import fi.letsdev.yourhealth.fragments.WatcherSetupFragment;
 import fi.letsdev.yourhealth.fragments.WelcomeFragment;
-import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
-import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
 import fi.letsdev.yourhealth.utils.Constants;
-import fi.letsdev.yourhealth.utils.NotificationAlertManager;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 
 public class MainActivity extends FragmentActivity {
