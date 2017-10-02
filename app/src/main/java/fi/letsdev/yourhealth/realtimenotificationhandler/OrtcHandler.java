@@ -5,11 +5,14 @@ import android.nfc.Tag;
 import android.text.Html;
 import android.util.Log;
 
+import java.util.List;
+
 import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.config.Config;
 import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 import ibt.ortc.api.Ortc;
+import ibt.ortc.api.Strings;
 import ibt.ortc.extensibility.OnConnected;
 import ibt.ortc.extensibility.OnDisconnected;
 import ibt.ortc.extensibility.OnException;
@@ -83,12 +86,14 @@ public class OrtcHandler {
 				public void run(OrtcClient sender) {
 					selfHandler.isConnected = true;
 
-					String channel = PreferencesManager
+					List<String> channels = PreferencesManager
 						.getInstance(selfHandler.context)
-						.loadChannel();
+						.loadChannels();
 
-					if (channel != null) {
-						subscribeChannel("TestChannel");
+					if (!channels.isEmpty()) {
+						for(String channel: channels) {
+							subscribeChannel(channel);
+						}
 						selfHandler.rootView.refreshData("Connected to push notification server");
 					} else {
 						Log.d(ORTC_TAG, "Channel has not been set to stored preference");

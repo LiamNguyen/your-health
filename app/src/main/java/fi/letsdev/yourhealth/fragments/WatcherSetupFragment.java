@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.Api;
 
+import java.util.List;
+
 import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.interfaces.InterfacePatientRepository;
@@ -49,6 +51,7 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 	private PreferencesManager preferencesManager;
 	private NotificationAlertManager notificationAlertManager;
 	private PatientRepository patientRepository;
+	private ViewGroup mainLayout;
 
 	public WatcherSetupFragment() {}
 
@@ -70,8 +73,6 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		View view = inflater.inflate(R.layout.fragment_watcher_setup, container, false);
 		setHasOptionsMenu(true);
 
-		addProgressBar(view);
-
 		txtMessageWatcherHint = (TextView)view.findViewById(R.id.txt_messageWatcherHint);
 		editTextPatientCode = (EditText)view.findViewById(R.id.editText_patientCode);
 		btnStartSubscribing = (Button)view.findViewById(R.id.btn_startSubscribing);
@@ -87,7 +88,9 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 					txtMessageWatcherHint.setText(getString(R.string.error_patientCodeEmtpy));
 					return;
 				}
+				btnStartSubscribing.setVisibility(View.INVISIBLE);
 				progressBarLayout.setVisibility(View.VISIBLE);
+
 				patientRepository.checkChannelValidity(channel);
 			}
 		});
@@ -96,16 +99,19 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		btnUnsubscribe.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				String channel = preferencesManager.loadChannel();
+				List<String> channels = preferencesManager.loadChannels();
 
-				if (channel == null) return;
-				OrtcHandler.getInstance().unsubscribeChannel(channel);
+				if (channels.size() > 1) {
+					((MainActivity)getActivity()).onShowingPatientListFragment();
+				} else if (!channels.isEmpty()) {
+					OrtcHandler.getInstance().unsubscribeChannel(channels.get(0));
+					preferencesManager.removeChannel(channels.get(0));
 
-				txtMessageWatcherHint.setText(getString(R.string.message_watcher_hint));
-				editTextPatientCode.setVisibility(View.VISIBLE);
-				btnStartSubscribing.setVisibility(View.VISIBLE);
-				btnUnsubscribe.setVisibility(View.INVISIBLE);
-				preferencesManager.removeChannel();
+					txtMessageWatcherHint.setText(getString(R.string.message_watcher_hint));
+					editTextPatientCode.setVisibility(View.VISIBLE);
+					btnStartSubscribing.setVisibility(View.VISIBLE);
+					btnUnsubscribe.setVisibility(View.INVISIBLE);
+				}
 			}
 		});
 
@@ -121,7 +127,10 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 			}
 		});
 
-		if (preferencesManager.loadChannel() != null) {
+		mainLayout = (ViewGroup)view.findViewById(R.id.main_layout);
+		addProgressBar(view);
+
+		if (!preferencesManager.loadChannels().isEmpty()) {
 			btnStartSubscribing.setVisibility(View.GONE);
 			progressBarLayout.setVisibility(View.VISIBLE);
 		}
@@ -174,6 +183,34 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		});
 	}
 
+	@Override
+	public void onChannelValidityResult(final Boolean valid, final Patient patient) {
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				progressBarLayout.setVisibility(View.INVISIBLE);
+
+				if (valid) {
+					OrtcHandler.getInstance().subscribeChannel(patient.getChannel());
+//					preferencesManager.saveChannel(patient.getChannel());
+					preferencesManager.savePatient(patient);
+
+					txtMessageWatcherHint.setText(getString(R.string.message_watcher_already_subscribe));
+					editTextPatientCode.setVisibility(View.GONE);
+					btnStartSubscribing.setVisibility(View.GONE);
+					btnUnsubscribe.setVisibility(View.VISIBLE);
+					txtMessageWatcherHint.setTextColor(Color.GRAY);
+				} else {
+					txtMessageWatcherHint.setText(getString(R.string.message_invalid_channel));
+					txtMessageWatcherHint.setTextColor(Color.RED);
+					btnStartSubscribing.setVisibility(View.VISIBLE);
+				}
+			}
+		});
+	}
+
+	//Programmatically add progress bar
+
 	private void addProgressBar(View view) {
 		progressBarLayout = new RelativeLayout(getContext());
 		progressBar = new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleLarge);
@@ -188,31 +225,10 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		RelativeLayout.LayoutParams progressBarLayout_params =
 			new RelativeLayout.LayoutParams(300, 300);
 		progressBarLayout_params.addRule(RelativeLayout.CENTER_IN_PARENT);
-		((ViewGroup)view.findViewById(R.id.main_layout)).addView(progressBarLayout, progressBarLayout_params);
-		progressBarLayout.setVisibility(View.GONE);
-	}
+		mainLayout.addView(progressBarLayout, progressBarLayout_params);
+		mainLayout.requestLayout();
+		mainLayout.bringChildToFront(progressBarLayout);
 
-	@Override
-	public void onChannelValidityResult(final Boolean valid, final String channel) {
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				progressBarLayout.setVisibility(View.INVISIBLE);
-
-				if (valid) {
-					OrtcHandler.getInstance().subscribeChannel(channel);
-					preferencesManager.saveChannel(channel);
-
-					txtMessageWatcherHint.setText(getString(R.string.message_watcher_already_subscribe));
-					editTextPatientCode.setVisibility(View.GONE);
-					btnStartSubscribing.setVisibility(View.GONE);
-					btnUnsubscribe.setVisibility(View.VISIBLE);
-					txtMessageWatcherHint.setTextColor(Color.GRAY);
-				} else {
-					txtMessageWatcherHint.setText(getString(R.string.message_invalid_channel));
-					txtMessageWatcherHint.setTextColor(Color.RED);
-				}
-			}
-		});
+		progressBarLayout.setVisibility(View.INVISIBLE);
 	}
 }

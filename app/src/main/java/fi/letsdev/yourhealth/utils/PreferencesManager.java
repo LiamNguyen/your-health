@@ -4,6 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import fi.letsdev.yourhealth.model.Patient;
+
 public class PreferencesManager {
 
 	private final SharedPreferences settings;
@@ -22,20 +28,104 @@ public class PreferencesManager {
 		return preferencesManager;
 	}
 
-	public String loadChannel() {
-		return settings.getString(Constants.PreferenceKey.CHANNEL, null);
-	}
+//	public String loadChannel() {
+//		return settings.getString(Constants.PreferenceKey.CHANNEL, null);
+//	}
 
-	public void saveChannel(String channel) {
+//	public void saveChannel(String channel) {
+//		SharedPreferences.Editor e = settings.edit();
+//		e.putString(Constants.PreferenceKey.CHANNEL, channel);
+//		e.apply();
+//	}
+
+	public void savePatient(Patient patient) {
 		SharedPreferences.Editor e = settings.edit();
-		e.putString(Constants.PreferenceKey.CHANNEL, channel);
+		ArrayList<Patient> patients = loadPatients();
+
+		patients.add(patient);
+
+		String patientsString = Helper.formStringFromPatientList(patients);
+
+		e.putString(Constants.PreferenceKey.PATIENT, patientsString);
 		e.apply();
 	}
 
-	public void removeChannel() {
+	public void savePatients(ArrayList<Patient> patients) {
 		SharedPreferences.Editor e = settings.edit();
-		e.remove(Constants.PreferenceKey.CHANNEL);
+		ArrayList<Patient> storedPatients = loadPatients();
+
+		for (Patient patient: patients) {
+			storedPatients.add(patient);
+		}
+
+		String patientsString = Helper.formStringFromPatientList(patients);
+
+		e.putString(Constants.PreferenceKey.PATIENT, patientsString);
 		e.apply();
+	}
+
+	public ArrayList<Patient> loadPatients() {
+		ArrayList<Patient> patients = new ArrayList<>();
+		String patientsString = settings.getString(Constants.PreferenceKey.PATIENT, null);
+
+		if (patientsString == null || patientsString.isEmpty())
+			return new ArrayList<>();
+
+		String[] patientStringArray = patientsString.split(",");
+
+		for (String patient: patientStringArray) {
+			String[] parts = patient.split(":");
+			patients.add(new Patient(
+				parts[0],
+				parts[1]
+			));
+		}
+		return patients;
+	}
+
+	public List<String> loadPatientNames() {
+		List<String> patientNames = new ArrayList<>();
+		String patientsString = settings.getString(Constants.PreferenceKey.PATIENT, null);
+
+		if (patientsString == null)
+			return new ArrayList<>();
+
+		String[] patientStringArray = patientsString.split(",");
+
+		for (String patient: patientStringArray) {
+			String[] parts = patient.split(":");
+			patientNames.add(parts[0]);
+		}
+		return patientNames;
+	}
+
+	public List<String> loadChannels() {
+		List<String> channels = new ArrayList<>();
+		String patientsString = settings.getString(Constants.PreferenceKey.PATIENT, null);
+
+		if (patientsString == null || patientsString.isEmpty())
+			return new ArrayList<>();
+
+		String[] patientStringArray = patientsString.split(",");
+
+		for (String patient: patientStringArray) {
+			String[] parts = patient.split(":");
+			channels.add(parts[1]);
+		}
+		return channels;
+	}
+
+	public void removeChannel(String channel) {
+		ArrayList<Patient> patients = loadPatients();
+
+		for (int i = 0; i < patients.size(); i++) {
+			if (patients.get(i).getChannel().equals(channel)) {
+				patients.remove(i);
+				break;
+			}
+		}
+
+		savePatients(patients);
 	}
 
 	public Constants.UserRole loadUserRole() {
