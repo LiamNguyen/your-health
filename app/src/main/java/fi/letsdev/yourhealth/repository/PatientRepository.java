@@ -37,14 +37,14 @@ public class PatientRepository {
 			public void onResponse(Call<Patient> call, Response<Patient> response) {
 				listener.onChannelValidityResult(
 					response.isSuccessful() && !response.body().isNull(),
-					channel
+					response.body()
 				);
 			}
 
 			@Override
 			public void onFailure(Call<Patient> call, Throwable t) {
 				Log.e(TAG, "Load patient failure", t);
-				listener.onChannelValidityResult(false, channel);
+				listener.onChannelValidityResult(false, new Patient());
 			}
 		});
 	}

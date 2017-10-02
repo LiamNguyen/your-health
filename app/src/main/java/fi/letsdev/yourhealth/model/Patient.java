@@ -3,7 +3,16 @@ package fi.letsdev.yourhealth.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Patient {
+import java.io.Serializable;
+
+public class Patient implements Serializable {
+
+	public Patient() {}
+
+	public Patient(String name, String channel) {
+		this.name = name;
+		this.channel = channel;
+	}
 
 	@SerializedName("_id")
 	@Expose

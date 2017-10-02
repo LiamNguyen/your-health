@@ -6,8 +6,9 @@
     <string name="message_welcome">Your health</string>
     <string name="message_role_choice">Are you a patient or a patient\'s family member?</string>
     <string name="message_watcher_hint">Please type here the patient\'s code in order to subscribe to emergency alert</string>
-    <string name="message_watcher_already_subscribe">You have been subscribed for notification alert</string>
+    <string name="message_watcher_already_subscribe">You have already been subscribing for notification alert</string>
     <string name="message_invalid_channel">Patient\'s code is invalid. Please check again with the patient</string>
+    <string name="message_unsubscribe_patient">Please select patient you want to unsubscribe from</string>
 
     <!--BUTTONS-->
     <string name="btn_patient">Patient</string>
@@ -24,5 +25,8 @@
 
     <!--Field validation error-->
     <string name="error_patientCodeEmtpy">Patient\'s code is empty</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

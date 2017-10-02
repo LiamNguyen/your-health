@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import fi.letsdev.yourhealth.fragments.RingWearerSetupFragment;
+import fi.letsdev.yourhealth.fragments.SubscribedPatientListFragment;
 import fi.letsdev.yourhealth.fragments.WatcherSetupFragment;
 import fi.letsdev.yourhealth.fragments.WelcomeFragment;
+import fi.letsdev.yourhealth.model.Patient;
 import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 
@@ -66,6 +68,14 @@ public class MainActivity extends FragmentActivity {
 		getSupportFragmentManager()
 			.beginTransaction()
 			.replace(R.id.main_frameLayout, new WatcherSetupFragment())
+			.addToBackStack(null)
+			.commit();
+	}
+
+	public void onShowingPatientListFragment() {
+		getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.main_frameLayout, new SubscribedPatientListFragment())
 			.addToBackStack(null)
 			.commit();
 	}

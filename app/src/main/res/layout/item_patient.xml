@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/txt_nameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="80dp"
+            android:textSize="20sp"
+            android:text="Name:"/>
+
+        <TextView
+            android:id="@+id/txt_patientName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_marginStart="20dp"
+            android:layout_alignBottom="@+id/txt_nameLabel"
+            android:layout_toEndOf="@+id/txt_channelLabel"
+            android:layout_alignTop="@+id/txt_nameLabel"
+            android:text="Sample Name"/>
+
+        <TextView
+            android:id="@+id/txt_channelLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/txt_patientName"
+            android:layout_alignStart="@+id/txt_nameLabel"
+            android:text="Channel:"/>
+
+        <TextView
+            android:id="@+id/txt_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="channel"
+            android:layout_alignBaseline="@+id/txt_channelLabel"
+            android:layout_alignBottom="@+id/txt_channelLabel"
+            android:layout_alignStart="@+id/txt_patientName"/>
+
+    </RelativeLayout>
+</RelativeLayout>
