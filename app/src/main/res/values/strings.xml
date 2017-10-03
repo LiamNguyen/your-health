@@ -9,6 +9,10 @@
     <string name="message_watcher_already_subscribe">You have already been subscribing for notification alert</string>
     <string name="message_invalid_channel">Patient\'s code is invalid. Please check again with the patient</string>
     <string name="message_unsubscribe_patient">Please select patient you want to unsubscribe from</string>
+    <string name="message_network_connectivity_lost">Your device has been disconnected from network connectivity.
+        Please reconnect your device to network and confirm by pressing OK</string>
+    <string name="message_notification_network_connectivity_lost">Your device has been disconnected from network connectivity.
+        Please reconnect or else, emergency push notification will not work</string>
 
     <!--BUTTONS-->
     <string name="btn_patient">Patient</string>
@@ -16,6 +20,7 @@
     <string name="btn_startSubscribing">Subscribe for emergency alert</string>
     <string name="btn_unsubscribe">Unsubscribe</string>
     <string name="btn_stopAlert">Stop</string>
+    <string name="btn_tryAgain">Try again</string>
 
     <!--MENU ITEM TITLE-->
     <string name="menuItem_rechooseRole">Rechoose role</string>

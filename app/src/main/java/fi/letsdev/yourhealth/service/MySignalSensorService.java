@@ -376,24 +376,21 @@ public class MySignalSensorService implements
 
 			if (value == null) return;
 
+			// ECG data
 			if (uuid.equals(StringConstants.kUUIDECGSensor)) {
-
 				HashMap<String, String> dataDict = LBValueConverter.manageValueElectrocardiography(value);
 
 				Log.d(TAG, "kUUIDECGSensor dict: " + dataDict);
 			}
 
+			// Pulsioximeter data
 			if (uuid.equals(StringConstants.kUUIDPulsiOximeterSensor) || uuid.equals(StringConstants.kUUIDPulsiOximeterBLESensor)) {
-
 				HashMap<String, String> dataDict = LBValueConverter.manageValuePulsiOximeter(value);
 
 				if (uuid.equals(StringConstants.kUUIDPulsiOximeterSensor)) {
-
 					Log.d(TAG, "kUUIDPulsiOximeterSensor dict: " + dataDict);
 				}
-
 				if (uuid.equals(StringConstants.kUUIDPulsiOximeterBLESensor)) {
-
 					Log.d(TAG, "kUUIDPulsiOximeterBLESensor dict: " + dataDict);
 				}
 			}
