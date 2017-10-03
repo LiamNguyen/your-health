@@ -28,16 +28,6 @@ public class PreferencesManager {
 		return preferencesManager;
 	}
 
-//	public String loadChannel() {
-//		return settings.getString(Constants.PreferenceKey.CHANNEL, null);
-//	}
-
-//	public void saveChannel(String channel) {
-//		SharedPreferences.Editor e = settings.edit();
-//		e.putString(Constants.PreferenceKey.CHANNEL, channel);
-//		e.apply();
-//	}
-
 	public void savePatient(Patient patient) {
 		SharedPreferences.Editor e = settings.edit();
 		ArrayList<Patient> patients = loadPatients();

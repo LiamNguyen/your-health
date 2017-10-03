@@ -3,6 +3,7 @@ package fi.letsdev.yourhealth.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
+import fi.letsdev.yourhealth.service.MySignalSensorService;
 
 public class RingWearerSetupFragment extends Fragment {
 
@@ -28,6 +30,13 @@ public class RingWearerSetupFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
 		return inflater.inflate(R.layout.fragment_ring_wearer_setup, container, false);
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		MySignalSensorService.getInstance().startService(getActivity());
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import fi.letsdev.yourhealth.remote.RetrofitClient;
 
 public class ApiUtils {
 
-	public static final String BASE_URL = "http://10.0.2.2:5000/api/";
+	public static final String BASE_URL = "http://10.112.223.8:5000/api/";
 
 	public static PatientService getPatientService() {
 		return RetrofitClient.getClient(BASE_URL).create(PatientService.class);

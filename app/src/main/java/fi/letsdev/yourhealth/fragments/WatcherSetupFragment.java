@@ -192,7 +192,6 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 
 				if (valid) {
 					OrtcHandler.getInstance().subscribeChannel(patient.getChannel());
-//					preferencesManager.saveChannel(patient.getChannel());
 					preferencesManager.savePatient(patient);
 
 					txtMessageWatcherHint.setText(getString(R.string.message_watcher_already_subscribe));
