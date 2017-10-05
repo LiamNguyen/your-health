@@ -23,12 +23,6 @@ public class Patient implements Serializable {
 	@SerializedName("channel")
 	@Expose
 	private String channel;
-	@SerializedName("__v")
-	@Expose
-	private Integer v;
-	@SerializedName("createdAt")
-	@Expose
-	private String createdAt;
 
 	public String getId() {
 		return id;
@@ -52,22 +46,6 @@ public class Patient implements Serializable {
 
 	public void setChannel(String channel) {
 		this.channel = channel;
-	}
-
-	public Integer getV() {
-		return v;
-	}
-
-	public void setV(Integer v) {
-		this.v = v;
-	}
-
-	public String getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
 	}
 
 	public Boolean isNull() {

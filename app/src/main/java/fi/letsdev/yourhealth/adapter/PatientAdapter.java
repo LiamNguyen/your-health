@@ -1,6 +1,7 @@
 package fi.letsdev.yourhealth.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.model.Patient;
@@ -24,8 +24,9 @@ public class PatientAdapter extends ArrayAdapter<Patient> {
 		super(context, R.layout.item_patient, patients);
 	}
 
+	@NonNull
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 		Patient president = getItem(position);
 		ViewHolder viewHolder;
 

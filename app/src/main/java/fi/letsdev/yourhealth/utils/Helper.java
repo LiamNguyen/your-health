@@ -1,13 +1,11 @@
 package fi.letsdev.yourhealth.utils;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import fi.letsdev.yourhealth.model.Patient;
 
-public class Helper {
-	public static String formStringFromPatientList(List<Patient> patients) {
+class Helper {
+	static String formStringFromPatientList(List<Patient> patients) {
 		StringBuilder stringFromHashMap = new StringBuilder();
 
 		for (Patient patient: patients) {

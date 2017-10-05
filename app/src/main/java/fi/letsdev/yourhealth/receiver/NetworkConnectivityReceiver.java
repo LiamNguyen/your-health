@@ -3,7 +3,6 @@ package fi.letsdev.yourhealth.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;

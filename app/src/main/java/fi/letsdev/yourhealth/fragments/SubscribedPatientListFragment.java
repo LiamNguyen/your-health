@@ -1,21 +1,16 @@
 package fi.letsdev.yourhealth.fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
-import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.adapter.PatientAdapter;
 import fi.letsdev.yourhealth.model.Patient;
@@ -40,7 +35,7 @@ public class SubscribedPatientListFragment extends Fragment {
 			PreferencesManager.getInstance(getContext()).loadPatients();
 		PatientAdapter patientAdapter = new PatientAdapter(getContext(), patientsList);
 
-		ListView listViewPatientList = (ListView) view.findViewById(R.id.listView_subscribedPatients);
+		ListView listViewPatientList = view.findViewById(R.id.listView_subscribedPatients);
 		listViewPatientList.setAdapter(patientAdapter);
 		listViewPatientList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override

@@ -2,10 +2,9 @@ package fi.letsdev.yourhealth.utils;
 
 public class Constants {
 
-	public static class PreferenceKey {
-		public static String CHANNEL = "CHANNEL";
-		public static String USER_ROLE = "USER_ROLE";
-		public static String PATIENT = "PATIENT";
+	static class PreferenceKey {
+		static String USER_ROLE = "USER_ROLE";
+		static String PATIENT = "PATIENT";
 	}
 
 	public enum UserRole {

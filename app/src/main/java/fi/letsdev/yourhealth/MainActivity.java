@@ -1,6 +1,5 @@
 package fi.letsdev.yourhealth;
 
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,7 +8,6 @@ import fi.letsdev.yourhealth.fragments.RingWearerSetupFragment;
 import fi.letsdev.yourhealth.fragments.SubscribedPatientListFragment;
 import fi.letsdev.yourhealth.fragments.WatcherSetupFragment;
 import fi.letsdev.yourhealth.fragments.WelcomeFragment;
-import fi.letsdev.yourhealth.model.Patient;
 import fi.letsdev.yourhealth.receiver.NetworkConnectivityReceiver;
 import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.PreferencesManager;

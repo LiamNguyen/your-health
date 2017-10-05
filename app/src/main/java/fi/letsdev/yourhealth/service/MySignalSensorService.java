@@ -22,11 +22,8 @@ import com.libelium.mysignalsconnectkit.utils.StringConstants;
 import com.libelium.mysignalsconnectkit.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.crypto.spec.DESedeKeySpec;
 
 public class MySignalSensorService implements
 	BluetoothManagerServicesCallback,
@@ -264,13 +261,7 @@ public class MySignalSensorService implements
 				writtenService = true;
 
 				for (BluetoothGattCharacteristic characteristic : characteristics) {
-					String uuid = characteristic.getUuid().toString().toUpperCase();
-
 					if (characteristic.getUuid().toString().toUpperCase().equals(StringConstants.kSensorList)) {
-//						Log.d(TAG, "characteristic: " + uuid);
-//						Log.d(TAG, "characteristic uuid: " + characteristic.getUuid().toString().toUpperCase());
-//						Log.d(TAG, "characteristic getWriteType: " + characteristic.getWriteType());
-
 						characteristicSensorList = characteristic;
 						break;
 					}
@@ -282,15 +273,7 @@ public class MySignalSensorService implements
 
 					byte[] data = BitManager.convertToData(bitManager.objectByte);
 
-					String dataString = Arrays.toString(data);
-					String hexByte = Utils.toHexString(data);
-
-//					Log.d(TAG, "hex dataString value: " + hexByte);
-//					Log.d(TAG, "dataString: " + dataString);
-
 					mService.writeCharacteristicQueue(characteristicSensorList, data);
-
-//					Log.d(TAG, "Writting characteristic: " + characteristicSensorList.getUuid().toString().toUpperCase());
 				}
 			}
 		}

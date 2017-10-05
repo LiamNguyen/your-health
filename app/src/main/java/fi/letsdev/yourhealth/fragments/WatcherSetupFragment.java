@@ -1,7 +1,6 @@
 package fi.letsdev.yourhealth.fragments;
 
 import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,9 +15,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.api.Api;
 
 import java.util.List;
 
@@ -28,14 +24,9 @@ import fi.letsdev.yourhealth.interfaces.InterfacePatientRepository;
 import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
 import fi.letsdev.yourhealth.model.Patient;
 import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
-import fi.letsdev.yourhealth.remote.PatientService;
 import fi.letsdev.yourhealth.repository.PatientRepository;
-import fi.letsdev.yourhealth.utils.ApiUtils;
 import fi.letsdev.yourhealth.utils.NotificationAlertManager;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class WatcherSetupFragment extends Fragment implements InterfaceRefresher, InterfacePatientRepository {
 
@@ -46,7 +37,6 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 	private Button btnStartSubscribing;
 	private Button btnUnsubscribe;
 	private Button btnStopAlert;
-	private ProgressBar progressBar;
 	private RelativeLayout progressBarLayout;
 	private PreferencesManager preferencesManager;
 	private NotificationAlertManager notificationAlertManager;
@@ -73,11 +63,11 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		View view = inflater.inflate(R.layout.fragment_watcher_setup, container, false);
 		setHasOptionsMenu(true);
 
-		txtMessageWatcherHint = (TextView)view.findViewById(R.id.txt_messageWatcherHint);
-		editTextPatientCode = (EditText)view.findViewById(R.id.editText_patientCode);
-		btnStartSubscribing = (Button)view.findViewById(R.id.btn_startSubscribing);
-		btnUnsubscribe = (Button)view.findViewById(R.id.btn_unsubscribe);
-		btnStopAlert = (Button)view.findViewById(R.id.btn_stopAlert);
+		txtMessageWatcherHint = view.findViewById(R.id.txt_messageWatcherHint);
+		editTextPatientCode = view.findViewById(R.id.editText_patientCode);
+		btnStartSubscribing = view.findViewById(R.id.btn_startSubscribing);
+		btnUnsubscribe = view.findViewById(R.id.btn_unsubscribe);
+		btnStopAlert = view.findViewById(R.id.btn_stopAlert);
 
 		btnStartSubscribing.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -127,8 +117,8 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 			}
 		});
 
-		mainLayout = (ViewGroup)view.findViewById(R.id.main_layout);
-		addProgressBar(view);
+		mainLayout = view.findViewById(R.id.main_layout);
+		addProgressBar();
 
 		if (!preferencesManager.loadChannels().isEmpty()) {
 			btnStartSubscribing.setVisibility(View.GONE);
@@ -210,9 +200,9 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 
 	//Programmatically add progress bar
 
-	private void addProgressBar(View view) {
+	private void addProgressBar() {
 		progressBarLayout = new RelativeLayout(getContext());
-		progressBar = new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleLarge);
+		ProgressBar progressBar = new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleLarge);
 		progressBar.setIndeterminate(true);
 		progressBar.setVisibility(View.VISIBLE);
 

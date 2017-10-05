@@ -1,8 +1,6 @@
 package fi.letsdev.yourhealth.realtimenotificationhandler;
 
 import android.content.Context;
-import android.nfc.Tag;
-import android.text.Html;
 import android.util.Log;
 
 import java.util.List;
@@ -12,7 +10,6 @@ import fi.letsdev.yourhealth.config.Config;
 import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 import ibt.ortc.api.Ortc;
-import ibt.ortc.api.Strings;
 import ibt.ortc.extensibility.OnConnected;
 import ibt.ortc.extensibility.OnDisconnected;
 import ibt.ortc.extensibility.OnException;
@@ -38,7 +35,6 @@ public class OrtcHandler {
 	}
 
 	private static OrtcClient client = null;
-	public Boolean isConnected;
 	private InterfaceRefresher rootView;
 	public InterfaceRefresher channel;
 	public Context context;
@@ -84,8 +80,6 @@ public class OrtcHandler {
 			client.onConnected = new OnConnected() {
 				@Override
 				public void run(OrtcClient sender) {
-					selfHandler.isConnected = true;
-
 					List<String> channels = PreferencesManager
 						.getInstance(selfHandler.context)
 						.loadChannels();

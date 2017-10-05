@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import fi.letsdev.yourhealth.model.Patient;
@@ -40,7 +39,7 @@ public class PreferencesManager {
 		e.apply();
 	}
 
-	public void savePatients(ArrayList<Patient> patients) {
+	private void savePatients(ArrayList<Patient> patients) {
 		SharedPreferences.Editor e = settings.edit();
 		ArrayList<Patient> storedPatients = loadPatients();
 
@@ -71,22 +70,6 @@ public class PreferencesManager {
 			));
 		}
 		return patients;
-	}
-
-	public List<String> loadPatientNames() {
-		List<String> patientNames = new ArrayList<>();
-		String patientsString = settings.getString(Constants.PreferenceKey.PATIENT, null);
-
-		if (patientsString == null)
-			return new ArrayList<>();
-
-		String[] patientStringArray = patientsString.split(",");
-
-		for (String patient: patientStringArray) {
-			String[] parts = patient.split(":");
-			patientNames.add(parts[0]);
-		}
-		return patientNames;
 	}
 
 	public List<String> loadChannels() {
