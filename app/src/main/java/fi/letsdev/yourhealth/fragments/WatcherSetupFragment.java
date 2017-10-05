@@ -147,6 +147,8 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 
 	@Override
 	public void refreshData(final String message) {
+		if (getActivity() == null) return;
+
 		getActivity().runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -175,6 +177,8 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 
 	@Override
 	public void onChannelValidityResult(final Boolean valid, final Patient patient) {
+		if (getActivity() == null) return;
+
 		getActivity().runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

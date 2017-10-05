@@ -76,6 +76,9 @@ public class MySignalSensorService implements
 	private void scanBluetoothDevices() {
 		bluetoothManager = BluetoothManagerHelper.getInstance();
 		bluetoothManager.setInitParameters(this, this.context);
+
+		if (bluetoothManager == null) return;
+
 		List<BluetoothDevice> devicesBonded = bluetoothManager.getBondedDevices();
 		if (devicesBonded.size() > 0) {
 			selectedDevice = null;
