@@ -58,7 +58,15 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receiver.MySignalsDataReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="fi.letsdev.android.mysignals.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
         <service android:name="ibt.ortc.extensibility.GcmOrtcIntentService" />
+        <service android:name=".service.BluetoothBackgroundService"/>
 
     </application>
 

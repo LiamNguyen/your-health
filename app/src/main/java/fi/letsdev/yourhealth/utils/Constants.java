@@ -7,6 +7,15 @@ public class Constants {
 		static String PATIENT = "PATIENT";
 	}
 
+	public static class IntentActions {
+		public static String CONNECTIVITY_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
+		public static String MYSIGNAL_HR_DATA_RECEIVE = "fi.letsdev.android.mysignals.RECEIVE";
+	}
+
+	public static class IntentExtras {
+		public static String BPM = "bpm";
+	}
+
 	public enum UserRole {
 		PATIENT("PATIENT"),
 		WATCHER("WATCHER"),

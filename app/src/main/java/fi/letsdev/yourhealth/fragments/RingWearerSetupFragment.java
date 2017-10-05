@@ -1,7 +1,8 @@
 package fi.letsdev.yourhealth.fragments;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,15 +13,34 @@ import android.view.ViewGroup;
 
 import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
-import fi.letsdev.yourhealth.service.MySignalSensorService;
+import fi.letsdev.yourhealth.receiver.MySignalsDataReceiver;
+import fi.letsdev.yourhealth.service.BluetoothBackgroundService;
+import fi.letsdev.yourhealth.utils.Constants;
 
 public class RingWearerSetupFragment extends Fragment {
+
+	private MySignalsDataReceiver mySignalsDataReceiver;
+	private IntentFilter ifilter;
 
 	public RingWearerSetupFragment() {}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		mySignalsDataReceiver = new MySignalsDataReceiver();
+		ifilter = new IntentFilter();
+		ifilter.addAction(Constants.IntentActions.MYSIGNAL_HR_DATA_RECEIVE);
+
+		Intent serviceIntent = new Intent(getContext(), BluetoothBackgroundService.class);
+		getActivity().startService(serviceIntent);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		getActivity().registerReceiver(mySignalsDataReceiver, ifilter);
 	}
 
 	@Override
@@ -28,13 +48,6 @@ public class RingWearerSetupFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
 		return inflater.inflate(R.layout.fragment_ring_wearer_setup, container, false);
-	}
-
-	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
-		MySignalSensorService.getInstance().startService(getActivity());
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
@@ -25,7 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MySignalSensorService implements
+import fi.letsdev.yourhealth.utils.Constants;
+
+class MySignalSensorService implements
 	BluetoothManagerServicesCallback,
 	BluetoothManagerCharacteristicsCallback,
 	BluetoothManagerQueueCallback,
@@ -34,11 +37,28 @@ public class MySignalSensorService implements
 
 	private static MySignalSensorService instance;
 
-	private MySignalSensorService() {}
+	private MySignalSensorService(Context context) {
+		// Prepare mysignals service
 
-	public static MySignalSensorService getInstance() {
+		this.context = context;
+		try {
+			mService = BluetoothManagerService.getInstance();
+			mService.initialize(context);
+			mService.setServicesCallback(this);
+			mService.setCharacteristicsCallback(this);
+			mService.setQueueCallback(this);
+		} catch (Exception e) {
+			Log.d(TAG, "Failed when setting up listener");
+		}
+
+		// Prepare intent for MySignalsDataReceiver
+		broadcastIntent = new Intent();
+		broadcastIntent.setAction(Constants.IntentActions.MYSIGNAL_HR_DATA_RECEIVE);
+	}
+
+	public static MySignalSensorService getInstance(Context context) {
 		if (instance == null) {
-			instance = new MySignalSensorService();
+			instance = new MySignalSensorService(context);
 		}
 		return instance;
 	}
@@ -55,21 +75,11 @@ public class MySignalSensorService implements
 	private ArrayList<LBSensorObject> selectedSensors;
 	private BluetoothGattService selectedService;
 	private BluetoothGattCharacteristic characteristicSensorList;
+	private final Intent broadcastIntent;
+	private Integer currentBpm = 0;
 
-	public void startService(Context context) {
-		this.context = context;
-		try {
-			mService = BluetoothManagerService.getInstance();
-			mService.initialize(context);
-			mService.setServicesCallback(this);
-			mService.setCharacteristicsCallback(this);
-			mService.setQueueCallback(this);
-		} catch (Exception e) {
-			Log.d(TAG, "Failed when setting up listener");
-		}
-
+	void startService() {
 		scanBluetoothDevices();
-
 		createInterface();
 	}
 
@@ -197,11 +207,6 @@ public class MySignalSensorService implements
 		Log.d(TAG, "Device MySignals not found!!!");
 	}
 
-	/**
-	 * Callback method to controls boning authentication errors.
-	 *
-	 * @param gatt Bluetooth manager
-	 */
 	@Override
 	public void onBondAuthenticationError(BluetoothGatt gatt) {
 
@@ -354,6 +359,8 @@ public class MySignalSensorService implements
 		readCharacteristic(characteristic);
 	}
 
+	// Receive data from MySignals sensors and broadcast if there are changes
+
 	private void readCharacteristic(BluetoothGattCharacteristic characteristic) {
 		try {
 			String uuid = characteristic.getUuid().toString().toUpperCase();
@@ -362,26 +369,33 @@ public class MySignalSensorService implements
 
 			if (value == null) return;
 
-			// ECG data
-			if (uuid.equals(StringConstants.kUUIDECGSensor)) {
-				HashMap<String, String> dataDict = LBValueConverter.manageValueElectrocardiography(value);
-
-				Log.d(TAG, "kUUIDECGSensor dict: " + dataDict);
-			}
-
 			// Pulsioximeter data
-			if (uuid.equals(StringConstants.kUUIDPulsiOximeterSensor) || uuid.equals(StringConstants.kUUIDPulsiOximeterBLESensor)) {
+			if (uuid.equals(StringConstants.kUUIDPulsiOximeterSensor)) {
 				HashMap<String, String> dataDict = LBValueConverter.manageValuePulsiOximeter(value);
 
 				if (uuid.equals(StringConstants.kUUIDPulsiOximeterSensor)) {
-					Log.d(TAG, "kUUIDPulsiOximeterSensor dict: " + dataDict);
-				}
-				if (uuid.equals(StringConstants.kUUIDPulsiOximeterBLESensor)) {
-					Log.d(TAG, "kUUIDPulsiOximeterBLESensor dict: " + dataDict);
+					Log.d(TAG, "kUUIDPulsiOximeterSensor dict: " + dataDict.get("1"));
+
+					Integer bpm = Integer.parseInt(dataDict.get("1"));
+
+					if (isBpmEnterWarningRange(bpm) || isNewBpmCreateMuchDifferentThanCurrentBpm(bpm)) {
+						currentBpm = bpm;
+
+						broadcastIntent.putExtra(Constants.IntentExtras.BPM, currentBpm);
+						context.sendBroadcast(broadcastIntent);
+					}
 				}
 			}
 		} catch (Exception e) {
 			Log.d(TAG, "Read characteristic failed: " + e);
 		}
+	}
+
+	private boolean isBpmEnterWarningRange(Integer bpm) {
+		return bpm < 30 || bpm > 140;
+	}
+
+	private boolean isNewBpmCreateMuchDifferentThanCurrentBpm(Integer bpm) {
+		return bpm < currentBpm - 3 || bpm > currentBpm + 3;
 	}
 }

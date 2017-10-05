@@ -23,9 +23,11 @@ public class MainActivity extends FragmentActivity {
 
 		navigate(savedInstanceState);
 
+		// Register network connectivity receiver
+
 		NetworkConnectivityReceiver rcvNetworkConnectivity = new NetworkConnectivityReceiver();
 		IntentFilter ifilter = new IntentFilter();
-		ifilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+		ifilter.addAction(Constants.IntentActions.CONNECTIVITY_CHANGE);
 		registerReceiver(rcvNetworkConnectivity, ifilter);
 	}
 

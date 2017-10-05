@@ -72,7 +72,7 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		btnStartSubscribing.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				String channel = editTextPatientCode.getText().toString();
+				String channel = editTextPatientCode.getText().toString().trim();
 				if (channel.isEmpty()) {
 					txtMessageWatcherHint.setTextColor(Color.RED);
 					txtMessageWatcherHint.setText(getString(R.string.error_patientCodeEmtpy));
