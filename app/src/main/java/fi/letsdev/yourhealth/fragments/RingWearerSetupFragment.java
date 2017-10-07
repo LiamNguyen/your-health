@@ -17,8 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.libelium.mysignalsconnectkit.BluetoothManagerService;
-
 import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.interfaces.InterfaceHeartRateDataCallback;

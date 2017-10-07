@@ -106,7 +106,8 @@ class MySignalSensorService implements
 						Log.d(TAG, "Address: " + name);
 						this.selectedDevice = deviceItem;
 						break;
-					} }
+					}
+				}
 			}
 			if (selectedDevice != null) {
 				performConnection();
@@ -403,8 +404,6 @@ class MySignalSensorService implements
 					}
 
 					if (bpmEqualZeroCounter.equals(20)) {
-						context.stopService(intent);
-
 						LocalNotificationHelper
 							.getInstance(context)
 							.createNotification(
