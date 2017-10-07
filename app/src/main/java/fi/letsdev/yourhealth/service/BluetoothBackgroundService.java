@@ -1,7 +1,6 @@
 package fi.letsdev.yourhealth.service;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -9,7 +8,7 @@ import android.util.Log;
 
 public class BluetoothBackgroundService extends Service {
 
-	private final static String TAG = "Bluetooth service";
+	private final static String TAG = BluetoothBackgroundService.class.getSimpleName();
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {

@@ -13,7 +13,7 @@ public class MySignalsDataReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Integer bpm = intent.getIntExtra(Constants.IntentExtras.BPM, 0);
+		Integer bpm = intent.getIntExtra(Constants.IntentExtras.BPM, -1);
 		Log.d(TAG, bpm.toString());
 
 		// TODO: Process bpm with business logic

@@ -13,7 +13,7 @@ import ibt.ortc.extensibility.GcmOrtcBroadcastReceiver;
 import ibt.ortc.plugins.IbtRealtimeSJ.OrtcMessage;
 
 public class GcmReceiver extends GcmOrtcBroadcastReceiver {
-	private static final String TAG = "GcmReceiver";
+	private static final String TAG = GcmReceiver.class.getSimpleName();
 
 	public GcmReceiver() {}
 

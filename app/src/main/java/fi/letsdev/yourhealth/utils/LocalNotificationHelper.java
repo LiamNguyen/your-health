@@ -30,6 +30,7 @@ public class LocalNotificationHelper {
 
 	private NotificationManager manager;
 	private static final String PRIMARY_CHANNEL = "default";
+	private static final String NOTIFICATION_CHANNEL = Constants.NOTIFICATION_CHANNEL_NAME;
 	private Context mContext;
 
 	public void createNotification(String title, String content) {
@@ -54,10 +55,9 @@ public class LocalNotificationHelper {
 
 			NotificationChannel notificationChannel = new NotificationChannel(
 				PRIMARY_CHANNEL,
-				"Channel name",
+				NOTIFICATION_CHANNEL,
 				NotificationManager.IMPORTANCE_MAX
 			);
-			notificationChannel.setDescription("EMERGENCY ALERT");
 			notificationChannel.setLightColor(Color.RED);
 			notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 			mNotificationManager.createNotificationChannel(notificationChannel);

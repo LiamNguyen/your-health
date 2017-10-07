@@ -30,7 +30,7 @@ import fi.letsdev.yourhealth.utils.PreferencesManager;
 
 public class WatcherSetupFragment extends Fragment implements InterfaceRefresher, InterfacePatientRepository {
 
-	private static final String TAG = "Watch Fragment";
+	private static final String TAG = WatcherSetupFragment.class.getSimpleName();
 
 	private TextView txtMessageWatcherHint;
 	private EditText editTextPatientCode;

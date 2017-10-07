@@ -10,7 +10,7 @@ import android.util.Log;
 public class NotificationAlertManager {
 	private static NotificationAlertManager instance = null;
 
-	private final String TAG = "Alert manager";
+	private final String TAG = NotificationAlertManager.class.getSimpleName();
 	private MediaPlayer mMediaPlayer;
 	private Uri alert;
 	private Context context;

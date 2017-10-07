@@ -63,8 +63,8 @@ class MySignalSensorService implements
 		return instance;
 	}
 
-	private final static String TAG = "MySignal sensor service";
-	private final static String kMySignalsId = "mysignals 000065";
+	private final static String TAG = MySignalSensorService.class.getSimpleName();
+	private final static String kMySignalsId = Constants.MYSIGNALS_ID;
 
 	private Context context;
 	private BluetoothManagerService mService;

@@ -26,7 +26,7 @@ public class PatientRepository {
 		return instance;
 	}
 
-	private static final String TAG = "Patient repository";
+	private static final String TAG = PatientRepository.class.getSimpleName();
 
 	private PatientService mService;
 	private InterfacePatientRepository listener;

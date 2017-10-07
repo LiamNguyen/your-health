@@ -39,7 +39,7 @@ public class OrtcHandler {
 	public InterfaceRefresher channel;
 	public Context context;
 
-	final private static String ORTC_TAG = "ORTC";
+	final private static String ORTC_TAG = OrtcHandler.class.getSimpleName();
 
 	public void subscribeChannel(String channel) {
 		if (client == null) return;
