@@ -22,11 +22,11 @@ public class GcmReceiver extends GcmOrtcBroadcastReceiver {
 		Log.d(TAG, "Notification received");
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
-			createNotification(context, extras);
+			handleNotification(context, extras);
 		}
 	}
 
-	public void createNotification(Context context, Bundle extras) {
+	public void handleNotification(Context context, Bundle extras) {
 		String message = extras.getString("M");
 		String channel = extras.getString("C");
 		String payload = extras.getString("P");

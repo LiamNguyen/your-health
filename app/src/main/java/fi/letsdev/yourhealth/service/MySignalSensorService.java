@@ -27,24 +27,26 @@ import java.util.HashMap;
 import java.util.List;
 
 import fi.letsdev.yourhealth.R;
-import fi.letsdev.yourhealth.interfaces.InterfaceHeartRateDataCallback;
+import fi.letsdev.yourhealth.interfaces.InterfaceMySignalSensorService;
+import fi.letsdev.yourhealth.interfaces.InterfaceStepsPerMinuteListener;
 import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.LocalNotificationHelper;
+import fi.letsdev.yourhealth.utils.StepsCounterManager;
 
 class MySignalSensorService implements
 	BluetoothManagerServicesCallback,
 	BluetoothManagerCharacteristicsCallback,
 	BluetoothManagerQueueCallback,
-	BluetoothManagerHelperCallback
+	BluetoothManagerHelperCallback,
+	InterfaceStepsPerMinuteListener
 {
 
 	private static MySignalSensorService instance;
 
-	private MySignalSensorService(Context context, Intent intent) {
+	private MySignalSensorService(Context context) {
 		// Prepare mysignals service
 
 		this.context = context;
-		this.intent = intent;
 		try {
 			mService = BluetoothManagerService.getInstance();
 			mService.initialize(context);
@@ -60,9 +62,9 @@ class MySignalSensorService implements
 		broadcastIntent.setAction(Constants.IntentActions.MYSIGNAL_HR_DATA_RECEIVE);
 	}
 
-	public static MySignalSensorService getInstance(Context context, Intent intent) {
+	public static MySignalSensorService getInstance(Context context) {
 		if (instance == null) {
-			instance = new MySignalSensorService(context, intent);
+			instance = new MySignalSensorService(context);
 		}
 		return instance;
 	}
@@ -71,8 +73,7 @@ class MySignalSensorService implements
 	private final static String kMySignalsId = Constants.MYSIGNALS_ID;
 
 	private Context context;
-	private Intent intent;
-	private InterfaceHeartRateDataCallback listener;
+	private InterfaceMySignalSensorService listener;
 	private BluetoothManagerService mService;
 	private BluetoothManagerHelper bluetoothManager;
 	private BluetoothDevice selectedDevice;
@@ -84,10 +85,14 @@ class MySignalSensorService implements
 	private final Intent broadcastIntent;
 	private Integer currentBpm = 0;
 	private Integer bpmEqualZeroCounter = 0;
+	private Integer stepsPerMinute = 0;
 
 	void startService() {
 		scanBluetoothDevices();
 		createInterface();
+
+		//Start counting steps
+		StepsCounterManager.getInstance(context, this).startMeasuringStepsPerMinute();
 	}
 
 	private void scanBluetoothDevices() {
@@ -367,7 +372,7 @@ class MySignalSensorService implements
 		readCharacteristic(characteristic);
 	}
 
-	void setListener(InterfaceHeartRateDataCallback listener) {
+	void setListener(InterfaceMySignalSensorService listener) {
 		this.listener = listener;
 	}
 
@@ -396,6 +401,7 @@ class MySignalSensorService implements
 						currentBpm = bpm;
 
 						broadcastIntent.putExtra(Constants.IntentExtras.BPM, currentBpm);
+						broadcastIntent.putExtra(Constants.IntentExtras.STEPS_PER_MINUTE, stepsPerMinute);
 						context.sendBroadcast(broadcastIntent);
 					}
 
@@ -424,5 +430,11 @@ class MySignalSensorService implements
 
 	private boolean isNewBpmCreateMuchDifferentThanCurrentBpm(Integer bpm) {
 		return bpm < currentBpm - 3 || bpm > currentBpm + 3;
+	}
+
+	@Override
+	public void onReceiveStepsPerMinute(Integer stepsPerMinute) {
+		this.stepsPerMinute = stepsPerMinute;
+		listener.onReceiveStepsPerMinute(stepsPerMinute);
 	}
 }

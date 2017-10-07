@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.text.BoringLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,18 +21,21 @@ import android.view.ViewGroup;
 import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.View.PlayGifView;
-import fi.letsdev.yourhealth.interfaces.InterfaceHeartRateDataCallback;
+import fi.letsdev.yourhealth.interfaces.InterfaceMySignalSensorService;
 import fi.letsdev.yourhealth.receiver.MySignalsDataReceiver;
-import fi.letsdev.yourhealth.service.BluetoothBackgroundService;
+import fi.letsdev.yourhealth.service.BackgroundService;
 import fi.letsdev.yourhealth.utils.Constants;
 
-public class RingWearerSetupFragment extends Fragment implements InterfaceHeartRateDataCallback {
+public class RingWearerSetupFragment extends Fragment implements InterfaceMySignalSensorService {
 
 	private MySignalsDataReceiver mySignalsDataReceiver;
 	private IntentFilter ifilter;
-	private boolean mBound = false;
+	private Boolean mBound = false;
 	private Intent serviceIntent;
 	private PlayGifView pGif;
+	private Integer bpm;
+	private Integer stepsPerMinute;
+	private static Boolean shouldAlertEmergency = false;
 
 	public RingWearerSetupFragment() {}
 
@@ -44,7 +47,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceHeartR
 		ifilter = new IntentFilter();
 		ifilter.addAction(Constants.IntentActions.MYSIGNAL_HR_DATA_RECEIVE);
 
-		serviceIntent = new Intent(getContext(), BluetoothBackgroundService.class);
+		serviceIntent = new Intent(getContext(), BackgroundService.class);
 		if (!mBound) {
 			getActivity().bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
 			getActivity().startService(serviceIntent);
@@ -119,9 +122,9 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceHeartR
 		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
 			mBound = true;
 
-			BluetoothBackgroundService.LocalBinder binder =
-				(BluetoothBackgroundService.LocalBinder) iBinder;
-			BluetoothBackgroundService mService = binder.getInstance();
+			BackgroundService.LocalBinder binder =
+				(BackgroundService.LocalBinder) iBinder;
+			BackgroundService mService = binder.getInstance();
 			mService.setListener(RingWearerSetupFragment.this);
 		}
 
@@ -133,6 +136,27 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceHeartR
 
 	@Override
 	public void onReceiveHeartRate(Integer bpm) {
-		Log.d("Frag", bpm.toString());
+		pGif.setVisibility(View.INVISIBLE);
+		this.bpm = bpm;
+		handleReceivedData();
+	}
+
+	@Override
+	public void onReceiveStepsPerMinute(Integer stepsPerMinute) {
+		this.stepsPerMinute = stepsPerMinute;
+		handleReceivedData();
+	}
+
+	public static Boolean shouldAlertEmergency() {
+		return shouldAlertEmergency;
+	}
+
+	private void handleReceivedData() {
+		if (bpm > Constants.BPM_MAX) {
+			if (stepsPerMinute > Constants.STEPS_PER_MINUTE_MAX) {
+				// TODO: Transition to new fragment with question if user is running
+			}
+			// TODO: Transition to new fragment with question if user is doing heavy lifting
+		}
 	}
 }

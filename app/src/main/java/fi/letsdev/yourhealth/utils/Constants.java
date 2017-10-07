@@ -14,6 +14,7 @@ public class Constants {
 
 	public static class IntentExtras {
 		public static String BPM = "bpm";
+		public static String STEPS_PER_MINUTE = "StepPerMinute";
 	}
 
 	public static String MYSIGNALS_ID = "mysignals 000065";
@@ -25,6 +26,12 @@ public class Constants {
 	public static class SaveInstanceStateKey {
 		public static String SERVICE_STATE = "Bluetooth service state";
 	}
+
+	public static Integer BPM_MAX = 150;
+
+	public static Integer BPM_MIN = 50;
+
+	public static Integer STEPS_PER_MINUTE_MAX = 250;
 
 	public enum UserRole {
 		PATIENT("PATIENT"),

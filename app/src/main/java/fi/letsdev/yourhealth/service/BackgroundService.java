@@ -7,11 +7,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import fi.letsdev.yourhealth.interfaces.InterfaceHeartRateDataCallback;
+import fi.letsdev.yourhealth.interfaces.InterfaceMySignalSensorService;
 
-public class BluetoothBackgroundService extends Service {
+public class BackgroundService extends Service {
 
-	private final static String TAG = BluetoothBackgroundService.class.getSimpleName();
+	private final static String TAG = BackgroundService.class.getSimpleName();
 
 	private final IBinder mBinder = new LocalBinder();
 	private MySignalSensorService mySignalSensorService;
@@ -20,7 +20,7 @@ public class BluetoothBackgroundService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "on start command");
 
-		mySignalSensorService = MySignalSensorService.getInstance(this, intent);
+		mySignalSensorService = MySignalSensorService.getInstance(this);
 		mySignalSensorService.startService();
 
 		return START_STICKY;
@@ -33,10 +33,10 @@ public class BluetoothBackgroundService extends Service {
 	}
 
 	public class LocalBinder extends Binder {
-		public BluetoothBackgroundService getInstance() { return BluetoothBackgroundService.this; }
+		public BackgroundService getInstance() { return BackgroundService.this; }
 	}
 
-	public void setListener(InterfaceHeartRateDataCallback listener) {
+	public void setListener(InterfaceMySignalSensorService listener) {
 		mySignalSensorService.setListener(listener);
 	}
 }

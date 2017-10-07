@@ -29,6 +29,8 @@ public class MainActivity extends FragmentActivity {
 		IntentFilter ifilter = new IntentFilter();
 		ifilter.addAction(Constants.IntentActions.CONNECTIVITY_CHANGE);
 		registerReceiver(rcvNetworkConnectivity, ifilter);
+
+		// HardCoded Ring Wearer channel
 	}
 
 	@Override
