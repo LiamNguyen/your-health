@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 
 import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
+import fi.letsdev.yourhealth.View.PlayGifView;
 import fi.letsdev.yourhealth.interfaces.InterfaceHeartRateDataCallback;
 import fi.letsdev.yourhealth.receiver.MySignalsDataReceiver;
 import fi.letsdev.yourhealth.service.BluetoothBackgroundService;
@@ -30,6 +32,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceHeartR
 	private IntentFilter ifilter;
 	private boolean mBound = false;
 	private Intent serviceIntent;
+	private PlayGifView pGif;
 
 	public RingWearerSetupFragment() {}
 
@@ -84,8 +87,14 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceHeartR
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_ring_wearer_setup, container, false);
 		setHasOptionsMenu(true);
-		return inflater.inflate(R.layout.fragment_ring_wearer_setup, container, false);
+
+		pGif = view.findViewById(R.id.viewGif);
+		pGif.setImageResource(R.drawable.scanning);
+		view.setBackgroundColor(Color.BLACK);
+
+		return view;
 	}
 
 	@Override
