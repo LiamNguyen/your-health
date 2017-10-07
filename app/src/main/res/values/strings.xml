@@ -13,6 +13,11 @@
         Please reconnect your device to network and confirm by pressing OK</string>
     <string name="message_notification_network_connectivity_lost">Your device has been disconnected from network connectivity.
         Please reconnect or else, emergency push notification will not work</string>
+    <string name="message_notification_ring_disconnected">Seems like you have taken off your ring.
+        Please reconnect after you have put it on via the application</string>
+
+    <!--NOTIFICATION_TITLES-->
+    <string name="notification_title_information">Information</string>
 
     <!--BUTTONS-->
     <string name="btn_patient">Patient</string>

@@ -22,6 +22,10 @@ public class Constants {
 
 	static String NOTIFICATION_CHANNEL_NAME = "Main channel";
 
+	public static class SaveInstanceStateKey {
+		public static String SERVICE_STATE = "Bluetooth service state";
+	}
+
 	public enum UserRole {
 		PATIENT("PATIENT"),
 		WATCHER("WATCHER"),

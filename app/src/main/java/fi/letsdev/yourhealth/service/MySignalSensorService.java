@@ -26,7 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import fi.letsdev.yourhealth.R;
+import fi.letsdev.yourhealth.interfaces.InterfaceHeartRateDataCallback;
 import fi.letsdev.yourhealth.utils.Constants;
+import fi.letsdev.yourhealth.utils.LocalNotificationHelper;
 
 class MySignalSensorService implements
 	BluetoothManagerServicesCallback,
@@ -37,10 +40,11 @@ class MySignalSensorService implements
 
 	private static MySignalSensorService instance;
 
-	private MySignalSensorService(Context context) {
+	private MySignalSensorService(Context context, Intent intent) {
 		// Prepare mysignals service
 
 		this.context = context;
+		this.intent = intent;
 		try {
 			mService = BluetoothManagerService.getInstance();
 			mService.initialize(context);
@@ -56,9 +60,9 @@ class MySignalSensorService implements
 		broadcastIntent.setAction(Constants.IntentActions.MYSIGNAL_HR_DATA_RECEIVE);
 	}
 
-	public static MySignalSensorService getInstance(Context context) {
+	public static MySignalSensorService getInstance(Context context, Intent intent) {
 		if (instance == null) {
-			instance = new MySignalSensorService(context);
+			instance = new MySignalSensorService(context, intent);
 		}
 		return instance;
 	}
@@ -67,6 +71,8 @@ class MySignalSensorService implements
 	private final static String kMySignalsId = Constants.MYSIGNALS_ID;
 
 	private Context context;
+	private Intent intent;
+	private InterfaceHeartRateDataCallback listener;
 	private BluetoothManagerService mService;
 	private BluetoothManagerHelper bluetoothManager;
 	private BluetoothDevice selectedDevice;
@@ -77,6 +83,7 @@ class MySignalSensorService implements
 	private BluetoothGattCharacteristic characteristicSensorList;
 	private final Intent broadcastIntent;
 	private Integer currentBpm = 0;
+	private Integer bpmEqualZeroCounter = 0;
 
 	void startService() {
 		scanBluetoothDevices();
@@ -359,6 +366,10 @@ class MySignalSensorService implements
 		readCharacteristic(characteristic);
 	}
 
+	void setListener(InterfaceHeartRateDataCallback listener) {
+		this.listener = listener;
+	}
+
 	// Receive data from MySignals sensors and broadcast if there are changes
 
 	private void readCharacteristic(BluetoothGattCharacteristic characteristic) {
@@ -378,11 +389,28 @@ class MySignalSensorService implements
 
 					Integer bpm = Integer.parseInt(dataDict.get("1"));
 
+					if (!bpm.equals(0) && listener != null) listener.onReceiveHeartRate(bpm);
+
 					if (isBpmEnterWarningRange(bpm) || isNewBpmCreateMuchDifferentThanCurrentBpm(bpm)) {
 						currentBpm = bpm;
 
 						broadcastIntent.putExtra(Constants.IntentExtras.BPM, currentBpm);
 						context.sendBroadcast(broadcastIntent);
+					}
+
+					if (bpm.equals(0)) {
+						bpmEqualZeroCounter++;
+					}
+
+					if (bpmEqualZeroCounter.equals(20)) {
+						context.stopService(intent);
+
+						LocalNotificationHelper
+							.getInstance(context)
+							.createNotification(
+								context.getString(R.string.notification_title_information),
+								context.getString(R.string.message_notification_ring_disconnected)
+							);
 					}
 				}
 			}
