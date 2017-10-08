@@ -36,7 +36,6 @@ public class OrtcHandler {
 
 	private static OrtcClient client = null;
 	private InterfaceRefresher rootView;
-	public InterfaceRefresher channel;
 	public Context context;
 
 	final private static String ORTC_TAG = OrtcHandler.class.getSimpleName();

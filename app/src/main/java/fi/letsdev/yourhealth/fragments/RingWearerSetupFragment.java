@@ -39,7 +39,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	private PlayGifView pGif;
 	private Integer bpm = 0;
 	private Integer stepsPerMinute = 0;
-	private static Boolean shouldAlertEmergency = false;
+	private static Boolean shouldAlertEmergency = false; // Will be use as global variable within this fragment in void handleReceivedData()
 	private RelativeLayout relativeLayoutHeartrate;
 	private TextView txtBpm;
 
@@ -164,7 +164,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 		if (getView() != null)
 			getView().setBackgroundColor(Color.WHITE);
 		relativeLayoutHeartrate.setVisibility(View.VISIBLE);
-		txtBpm.setText(bpm.toString());
+		txtBpm.setText(String.valueOf(bpm));
 
 		this.bpm = bpm;
 		handleReceivedData();

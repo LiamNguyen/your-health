@@ -3,10 +3,8 @@ package fi.letsdev.yourhealth.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import fi.letsdev.yourhealth.fragments.RingWearerSetupFragment;
-import fi.letsdev.yourhealth.model.Patient;
 import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
 import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.PreferencesManager;

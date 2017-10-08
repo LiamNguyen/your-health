@@ -36,16 +36,8 @@ public class Patient implements Serializable {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getChannel() {
 		return channel;
-	}
-
-	public void setChannel(String channel) {
-		this.channel = channel;
 	}
 
 	public Boolean isNull() {

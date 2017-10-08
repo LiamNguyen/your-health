@@ -33,7 +33,7 @@ import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.LocalNotificationHelper;
 import fi.letsdev.yourhealth.utils.StepsCounterManager;
 
-public class MySignalSensorService implements
+class MySignalSensorService implements
 	BluetoothManagerServicesCallback,
 	BluetoothManagerCharacteristicsCallback,
 	BluetoothManagerQueueCallback,
@@ -440,7 +440,7 @@ public class MySignalSensorService implements
 	}
 
 	//Mock
-	public void mock(Integer mockBpm) {
+	private void mock(Integer mockBpm) {
 		listener.onReceiveHeartRate(mockBpm);
 		broadcastIntent.putExtra(Constants.IntentExtras.BPM, mockBpm);
 		context.sendBroadcast(broadcastIntent);
