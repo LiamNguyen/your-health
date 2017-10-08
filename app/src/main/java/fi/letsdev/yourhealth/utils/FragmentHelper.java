@@ -1,6 +1,5 @@
 package fi.letsdev.yourhealth.utils;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;

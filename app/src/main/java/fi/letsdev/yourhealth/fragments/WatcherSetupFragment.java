@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,7 +42,6 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 	private PreferencesManager preferencesManager;
 	private NotificationAlertManager notificationAlertManager;
 	private PatientRepository patientRepository;
-	private ViewGroup mainLayout;
 
 	public WatcherSetupFragment() {}
 
@@ -118,7 +116,7 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 			}
 		});
 
-		mainLayout = view.findViewById(R.id.main_layout);
+		ViewGroup mainLayout = view.findViewById(R.id.main_layout);
 		progressBarLayout = new RelativeLayout(getContext());
 		ViewHelper.addProgressBar(progressBarLayout, mainLayout, getContext());
 

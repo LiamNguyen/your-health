@@ -18,6 +18,8 @@
     <string name="message_welcome_ringwearer">Hello, your \"ring\" looks nice… ^_^</string>
     <string name="message_ask_for_name">May I have your name?</string>
     <string name="message_server_error">There was a server error. Please try again later</string>
+    <string name="message_heartrate_title">Heart rate:</string>
+    <string name="message_bpm_unit">BPM</string>
 
     <!--NOTIFICATION_TITLES-->
     <string name="notification_title_information">Information</string>

@@ -16,6 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
@@ -38,6 +40,8 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	private Integer bpm = 0;
 	private Integer stepsPerMinute = 0;
 	private static Boolean shouldAlertEmergency = false;
+	private RelativeLayout relativeLayoutHeartrate;
+	private TextView txtBpm;
 
 	public RingWearerSetupFragment() {}
 
@@ -101,6 +105,9 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 		pGif = view.findViewById(R.id.viewGif);
 		pGif.setImageResource(R.drawable.scanning);
 		view.setBackgroundColor(Color.BLACK);
+		relativeLayoutHeartrate = view.findViewById(R.id.relativeLayout_heartrate);
+		relativeLayoutHeartrate.setVisibility(View.INVISIBLE);
+		txtBpm = view.findViewById(R.id.txt_bpm);
 
 		return view;
 	}
@@ -153,9 +160,11 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 		if (PreferencesManager.getInstance(getContext()).loadRingWearer().isNull())
 			((MainActivity) getActivity()).onShowRingWearerCollectInformationFragment();
 
-		pGif.setVisibility(View.INVISIBLE);
+		pGif.setImageResource(R.drawable.heartbeat);
 		if (getView() != null)
 			getView().setBackgroundColor(Color.WHITE);
+		relativeLayoutHeartrate.setVisibility(View.VISIBLE);
+		txtBpm.setText(bpm.toString());
 
 		this.bpm = bpm;
 		handleReceivedData();
