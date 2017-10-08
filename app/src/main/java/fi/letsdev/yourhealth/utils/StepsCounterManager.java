@@ -47,9 +47,7 @@ public class StepsCounterManager implements SensorEventListener {
 		if (startTime == 0) {
 			startTime = currentTime;
 			startSteps = currentSteps;
-		}
-
-		if (measuringPeriod > 5) {
+		} else if (measuringPeriod > 5) {
 			numberOfSteps = currentSteps - startSteps;
 			startTime = 0;
 			startSteps = currentSteps;

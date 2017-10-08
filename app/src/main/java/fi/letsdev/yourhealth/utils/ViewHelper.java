@@ -12,7 +12,6 @@ public class ViewHelper {
 	//Programmatically add progress bar
 
 	public static void addProgressBar(RelativeLayout progressBarLayout, ViewGroup mainLayout, Context context) {
-		progressBarLayout = new RelativeLayout(context);
 		ProgressBar progressBar = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
 		progressBar.setIndeterminate(true);
 		progressBar.setVisibility(View.VISIBLE);

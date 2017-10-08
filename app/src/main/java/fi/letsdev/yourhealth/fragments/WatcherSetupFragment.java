@@ -25,8 +25,10 @@ import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
 import fi.letsdev.yourhealth.model.Patient;
 import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
 import fi.letsdev.yourhealth.repository.PatientRepository;
+import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.NotificationAlertManager;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
+import fi.letsdev.yourhealth.utils.ViewHelper;
 
 public class WatcherSetupFragment extends Fragment implements InterfaceRefresher, InterfacePatientRepository {
 
@@ -50,8 +52,7 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		super.onCreate(savedInstanceState);
 
 		OrtcHandler.getInstance().prepareClient(getContext(), WatcherSetupFragment.this);
-		OrtcHandler.getInstance().channel = WatcherSetupFragment.this;
-		
+
 		preferencesManager = PreferencesManager.getInstance(getContext());
 		notificationAlertManager = NotificationAlertManager.getInstance(getContext());
 		patientRepository = PatientRepository.getInstance(this);
@@ -118,7 +119,8 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		});
 
 		mainLayout = view.findViewById(R.id.main_layout);
-		addProgressBar();
+		progressBarLayout = new RelativeLayout(getContext());
+		ViewHelper.addProgressBar(progressBarLayout, mainLayout, getContext());
 
 		if (!preferencesManager.loadChannels().isEmpty()) {
 			btnStartSubscribing.setVisibility(View.GONE);
@@ -139,6 +141,20 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 		switch (item.getItemId()) {
 			case R.id.action_backToWelcome:
 				((MainActivity)getContext()).onRechooseRole();
+				List<String> channels = preferencesManager.loadChannels();
+
+				for (String channel: channels) {
+					OrtcHandler.getInstance().unsubscribeChannel(channel);
+					preferencesManager.removeChannel(channel);
+				}
+
+				PreferencesManager.getInstance(getContext()).saveUserRole(Constants.UserRole.NOT_SET);
+
+				txtMessageWatcherHint.setText(getString(R.string.message_watcher_hint));
+				editTextPatientCode.setVisibility(View.VISIBLE);
+				btnStartSubscribing.setVisibility(View.VISIBLE);
+				btnUnsubscribe.setVisibility(View.INVISIBLE);
+
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -200,28 +216,6 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 				}
 			}
 		});
-	}
-	//Programmatically add progress bar
-
-	private void addProgressBar() {
-		progressBarLayout = new RelativeLayout(getContext());
-		ProgressBar progressBar = new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleLarge);
-		progressBar.setIndeterminate(true);
-		progressBar.setVisibility(View.VISIBLE);
-
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(200, 200);
-		params.addRule(RelativeLayout.CENTER_IN_PARENT);
-		progressBarLayout.addView(progressBar, params);
-		progressBarLayout.setBackgroundColor(Color.LTGRAY);
-
-		RelativeLayout.LayoutParams progressBarLayout_params =
-			new RelativeLayout.LayoutParams(300, 300);
-		progressBarLayout_params.addRule(RelativeLayout.CENTER_IN_PARENT);
-		mainLayout.addView(progressBarLayout, progressBarLayout_params);
-		mainLayout.requestLayout();
-		mainLayout.bringChildToFront(progressBarLayout);
-
-		progressBarLayout.setVisibility(View.INVISIBLE);
 	}
 
 	@Override

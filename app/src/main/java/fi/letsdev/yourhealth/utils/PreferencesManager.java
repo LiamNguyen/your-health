@@ -141,4 +141,10 @@ public class PreferencesManager {
 
 		return new Patient(parts[0], parts[1]);
 	}
+
+	public void removeRingWearer() {
+		SharedPreferences.Editor e = settings.edit();
+		e.remove(Constants.PreferenceKey.RING_WEARER);
+		e.apply();
+	}
 }

@@ -49,8 +49,7 @@ public class Patient implements Serializable {
 	}
 
 	public Boolean isNull() {
-		return id == null ||
-			name == null ||
+		return name == null ||
 			channel == null;
 	}
 }

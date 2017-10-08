@@ -21,7 +21,9 @@ import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.interfaces.InterfacePatientRepository;
 import fi.letsdev.yourhealth.model.Patient;
 import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
+import fi.letsdev.yourhealth.receiver.MySignalsDataReceiver;
 import fi.letsdev.yourhealth.repository.PatientRepository;
+import fi.letsdev.yourhealth.service.MySignalSensorService;
 import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 import fi.letsdev.yourhealth.utils.ViewHelper;
@@ -54,6 +56,7 @@ public class RingWearerCollectInformationFragment extends Fragment implements In
 		super.onViewCreated(view, savedInstanceState);
 
 		mainLayout = view.findViewById(R.id.main_layout);
+		progressBarLayout = new RelativeLayout(getContext());
 		ViewHelper.addProgressBar(progressBarLayout, mainLayout, getContext());
 
 		editTextName = view.findViewById(R.id.editText_patientName);
@@ -82,8 +85,8 @@ public class RingWearerCollectInformationFragment extends Fragment implements In
 				progressBarLayout.setVisibility(View.VISIBLE);
 				patientRepository.addPatient(
 					new Patient(
-						editTextName.getText().toString(),
-						Constants.MYSIGNALS_ID // Hardcoded because I don't have the real ring
+						editTextName.getText().toString().trim(),
+						Constants.MYSIGNALS_ID.replace(" ", "") // Hardcoded because I don't have the real ring
 					)
 				);
 			}
@@ -105,7 +108,8 @@ public class RingWearerCollectInformationFragment extends Fragment implements In
 		} else {
 			OrtcHandler.getInstance().subscribeChannel(patient.getChannel());
 			PreferencesManager.getInstance(getContext()).saveRingWearer(patient);
-			((MainActivity) getActivity()).onShowRingWearerSetupFragment();
+			if (getActivity() != null)
+				((MainActivity) getActivity()).onShowRingWearerSetupFragment();
 		}
 	}
 

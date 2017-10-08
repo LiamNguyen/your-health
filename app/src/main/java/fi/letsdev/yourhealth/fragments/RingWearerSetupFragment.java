@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.BoringLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,20 +21,22 @@ import fi.letsdev.yourhealth.MainActivity;
 import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.View.PlayGifView;
 import fi.letsdev.yourhealth.interfaces.InterfaceMySignalSensorService;
+import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
+import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
 import fi.letsdev.yourhealth.receiver.MySignalsDataReceiver;
 import fi.letsdev.yourhealth.service.BackgroundService;
 import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 
-public class RingWearerSetupFragment extends Fragment implements InterfaceMySignalSensorService {
+public class RingWearerSetupFragment extends Fragment implements InterfaceMySignalSensorService, InterfaceRefresher {
 
 	private MySignalsDataReceiver mySignalsDataReceiver;
 	private IntentFilter ifilter;
 	private Boolean mBound = false;
 	private Intent serviceIntent;
 	private PlayGifView pGif;
-	private Integer bpm;
-	private Integer stepsPerMinute;
+	private Integer bpm = 0;
+	private Integer stepsPerMinute = 0;
 	private static Boolean shouldAlertEmergency = false;
 
 	public RingWearerSetupFragment() {}
@@ -43,6 +44,8 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		OrtcHandler.getInstance().prepareClient(getContext(), this);
 
 		mySignalsDataReceiver = new MySignalsDataReceiver();
 		ifilter = new IntentFilter();
@@ -85,6 +88,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 		if (mBound) {
 			getActivity().unbindService(mConnection);
+			mBound = false;
 		}
 	}
 
@@ -111,7 +115,16 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_backToWelcome:
+				String ringWearerChannel =
+					PreferencesManager
+						.getInstance(getContext())
+						.loadRingWearer()
+						.getChannel();
+
 				((MainActivity)getActivity()).onRechooseRole();
+				OrtcHandler.getInstance().unsubscribeChannel(ringWearerChannel);
+				PreferencesManager.getInstance(getContext()).removeRingWearer();
+				PreferencesManager.getInstance(getContext()).saveUserRole(Constants.UserRole.NOT_SET);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -141,6 +154,9 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 			((MainActivity) getActivity()).onShowRingWearerCollectInformationFragment();
 
 		pGif.setVisibility(View.INVISIBLE);
+		if (getView() != null)
+			getView().setBackgroundColor(Color.WHITE);
+
 		this.bpm = bpm;
 		handleReceivedData();
 	}
@@ -163,4 +179,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 			// TODO: Transition to new fragment with question if user is doing heavy lifting
 		}
 	}
+
+	@Override
+	public void refreshData(String message) {}
 }

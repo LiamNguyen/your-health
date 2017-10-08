@@ -33,7 +33,7 @@ import fi.letsdev.yourhealth.utils.Constants;
 import fi.letsdev.yourhealth.utils.LocalNotificationHelper;
 import fi.letsdev.yourhealth.utils.StepsCounterManager;
 
-class MySignalSensorService implements
+public class MySignalSensorService implements
 	BluetoothManagerServicesCallback,
 	BluetoothManagerCharacteristicsCallback,
 	BluetoothManagerQueueCallback,
@@ -374,6 +374,7 @@ class MySignalSensorService implements
 
 	void setListener(InterfaceMySignalSensorService listener) {
 		this.listener = listener;
+		mock(20);
 	}
 
 	// Receive data from MySignals sensors and broadcast if there are changes
@@ -436,5 +437,12 @@ class MySignalSensorService implements
 	public void onReceiveStepsPerMinute(Integer stepsPerMinute) {
 		this.stepsPerMinute = stepsPerMinute;
 		listener.onReceiveStepsPerMinute(stepsPerMinute);
+	}
+
+	//Mock
+	public void mock(Integer mockBpm) {
+		listener.onReceiveHeartRate(mockBpm);
+		broadcastIntent.putExtra(Constants.IntentExtras.BPM, mockBpm);
+		context.sendBroadcast(broadcastIntent);
 	}
 }

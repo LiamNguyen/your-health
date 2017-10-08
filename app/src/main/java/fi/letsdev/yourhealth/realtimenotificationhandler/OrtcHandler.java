@@ -56,7 +56,8 @@ public class OrtcHandler {
 	}
 
 	public void prepareClient(Context context, InterfaceRefresher rootView) {
-		selfHandler = new OrtcHandler();
+		if (selfHandler.context != null) return;
+
 		selfHandler.context = context;
 		selfHandler.rootView = rootView;
 
@@ -160,8 +161,6 @@ public class OrtcHandler {
 			channel
 		));
 
-		selfHandler.channel.refreshData(message);
-
-		// TODO: 24/09/2017: Showing messages to subscribers
+		selfHandler.rootView.refreshData(message);
 	}
 }
