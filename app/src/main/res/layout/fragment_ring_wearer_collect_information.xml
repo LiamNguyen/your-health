@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="fi.letsdev.yourhealth.fragments.RingWearerCollectInformationFragment"
+             android:id="@+id/main_layout">
+
+    <TextView
+        android:id="@+id/txt_welcome_ring_wearer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="@string/message_welcome_ringwearer"/>
+
+    <TextView
+        android:id="@+id/txt_ask_for_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_welcome_ring_wearer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="73dp"
+        android:textSize="23sp"
+        android:text="@string/message_ask_for_name"/>
+
+    <EditText
+        android:id="@+id/editText_patientName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_below="@+id/txt_ask_for_name"
+        android:layout_alignParentStart="true"
+        android:hint="@string/placeHolder_patientName"/>
+
+    <Button
+        android:id="@+id/btn_submitNewPatient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editText_patientName"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:text="@string/btn_continue"/>
+
+</RelativeLayout>

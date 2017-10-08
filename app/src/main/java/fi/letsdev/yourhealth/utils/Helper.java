@@ -17,4 +17,8 @@ class Helper {
 
 		return stringFromHashMap.toString();
 	}
+
+	static String formStringFromPatient(Patient patient) {
+		return patient.getName() + ":" + patient.getChannel();
+	}
 }

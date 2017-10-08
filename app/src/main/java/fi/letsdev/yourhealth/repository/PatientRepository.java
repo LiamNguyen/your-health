@@ -48,4 +48,18 @@ public class PatientRepository {
 			}
 		});
 	}
+
+	public void addPatient(Patient patient) {
+		mService.addPatient(patient).enqueue(new Callback<Patient>() {
+			@Override
+			public void onResponse(Call<Patient> call, Response<Patient> response) {
+				listener.onAddPatient(response.body());
+			}
+
+			@Override
+			public void onFailure(Call<Patient> call, Throwable t) {
+
+			}
+		});
+	}
 }

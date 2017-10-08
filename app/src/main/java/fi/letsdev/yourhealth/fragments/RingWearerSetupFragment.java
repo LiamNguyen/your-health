@@ -25,6 +25,7 @@ import fi.letsdev.yourhealth.interfaces.InterfaceMySignalSensorService;
 import fi.letsdev.yourhealth.receiver.MySignalsDataReceiver;
 import fi.letsdev.yourhealth.service.BackgroundService;
 import fi.letsdev.yourhealth.utils.Constants;
+import fi.letsdev.yourhealth.utils.PreferencesManager;
 
 public class RingWearerSetupFragment extends Fragment implements InterfaceMySignalSensorService {
 
@@ -136,6 +137,9 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 	@Override
 	public void onReceiveHeartRate(Integer bpm) {
+		if (PreferencesManager.getInstance(getContext()).loadRingWearer().isNull())
+			((MainActivity) getActivity()).onShowRingWearerCollectInformationFragment();
+
 		pGif.setVisibility(View.INVISIBLE);
 		this.bpm = bpm;
 		handleReceivedData();

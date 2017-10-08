@@ -24,6 +24,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile files('libs/mysignalsconnectkit.jar')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'co.realtime:messaging-android:2.1.+'
     compile 'com.android.support:support-v4:26.+'
@@ -31,5 +32,4 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.1'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     testCompile 'junit:junit:4.12'
-    compile files('libs/mysignalsconnectkit.jar')
 }

@@ -201,7 +201,6 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 			}
 		});
 	}
-
 	//Programmatically add progress bar
 
 	private void addProgressBar() {
@@ -224,4 +223,7 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 
 		progressBarLayout.setVisibility(View.INVISIBLE);
 	}
+
+	@Override
+	public void onAddPatient(Patient patient) {}
 }

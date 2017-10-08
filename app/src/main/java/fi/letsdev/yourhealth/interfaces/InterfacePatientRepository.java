@@ -4,4 +4,5 @@ import fi.letsdev.yourhealth.model.Patient;
 
 public interface InterfacePatientRepository {
 	void onChannelValidityResult(Boolean valid, Patient patient);
+	void onAddPatient(Patient patient);
 }

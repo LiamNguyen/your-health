@@ -3,6 +3,7 @@ package fi.letsdev.yourhealth.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,8 @@ public class PreferencesManager {
 		SharedPreferences.Editor e = settings.edit();
 		ArrayList<Patient> patients = loadPatients();
 
-		patients.add(patient);
+		if (!loadChannels().contains(patient.getChannel()))
+			patients.add(patient);
 
 		String patientsString = Helper.formStringFromPatientList(patients);
 
@@ -120,5 +122,23 @@ public class PreferencesManager {
 		SharedPreferences.Editor e = settings.edit();
 		e.putString(Constants.PreferenceKey.USER_ROLE, userRole.toString());
 		e.apply();
+	}
+
+	public void saveRingWearer(Patient patient) {
+		SharedPreferences.Editor e = settings.edit();
+		String patientString = Helper.formStringFromPatient(patient);
+
+		e.putString(Constants.PreferenceKey.RING_WEARER, patientString);
+		e.apply();
+	}
+
+	public Patient loadRingWearer() {
+		String patientString = settings.getString(Constants.PreferenceKey.RING_WEARER, null);
+
+		if (patientString == null) return new Patient();
+
+		String[] parts = patientString.split(":");
+
+		return new Patient(parts[0], parts[1]);
 	}
 }

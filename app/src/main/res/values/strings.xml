@@ -15,6 +15,9 @@
         Please reconnect or else, emergency push notification will not work</string>
     <string name="message_notification_ring_disconnected">Seems like you have taken off your ring.
         Please reconnect after you have put it on via the application</string>
+    <string name="message_welcome_ringwearer">Hello, your \"ring\" looks nice… ^_^</string>
+    <string name="message_ask_for_name">May I have your name?</string>
+    <string name="message_server_error">There was a server error. Please try again later</string>
 
     <!--NOTIFICATION_TITLES-->
     <string name="notification_title_information">Information</string>
@@ -26,15 +29,18 @@
     <string name="btn_unsubscribe">Unsubscribe</string>
     <string name="btn_stopAlert">Stop</string>
     <string name="btn_tryAgain">Try again</string>
+    <string name="btn_continue">Continue</string>
 
     <!--MENU ITEM TITLE-->
     <string name="menuItem_rechooseRole">Rechoose role</string>
 
     <!--PLACEHOLDERS-->
     <string name="placeHolder_patientCode">Patient\'s code</string>
+    <string name="placeHolder_patientName">Your fullname here</string>
 
     <!--Field validation error-->
     <string name="error_patientCodeEmtpy">Patient\'s code is empty</string>
+    <string name="error_patientNameEmpty">Name is empty</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

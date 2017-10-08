@@ -5,6 +5,7 @@ public class Constants {
 	static class PreferenceKey {
 		static String USER_ROLE = "USER_ROLE";
 		static String PATIENT = "PATIENT";
+		static String RING_WEARER = "RING_WEARER";
 	}
 
 	public static class IntentActions {
@@ -19,7 +20,9 @@ public class Constants {
 
 	public static String MYSIGNALS_ID = "mysignals 000065";
 
-	static String API_URL = "http://10.112.204.134:5000/api/";
+//	static String API_URL = "http://10.112.204.134:5000/api/";
+
+		static String API_URL = "http://10.0.2.2:5000/api/";
 
 	static String NOTIFICATION_CHANNEL_NAME = "Main channel";
 

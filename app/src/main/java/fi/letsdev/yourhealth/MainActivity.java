@@ -2,14 +2,19 @@ package fi.letsdev.yourhealth;
 
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
+import fi.letsdev.yourhealth.fragments.RingWearerCollectInformationFragment;
 import fi.letsdev.yourhealth.fragments.RingWearerSetupFragment;
 import fi.letsdev.yourhealth.fragments.SubscribedPatientListFragment;
 import fi.letsdev.yourhealth.fragments.WatcherSetupFragment;
 import fi.letsdev.yourhealth.fragments.WelcomeFragment;
 import fi.letsdev.yourhealth.receiver.NetworkConnectivityReceiver;
 import fi.letsdev.yourhealth.utils.Constants;
+import fi.letsdev.yourhealth.utils.FragmentHelper;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 
 public class MainActivity extends FragmentActivity {
@@ -29,8 +34,6 @@ public class MainActivity extends FragmentActivity {
 		IntentFilter ifilter = new IntentFilter();
 		ifilter.addAction(Constants.IntentActions.CONNECTIVITY_CHANGE);
 		registerReceiver(rcvNetworkConnectivity, ifilter);
-
-		// HardCoded Ring Wearer channel
 	}
 
 	@Override
@@ -54,56 +57,40 @@ public class MainActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			switch (userRole) {
 				case PATIENT:
-					getSupportFragmentManager()
-						.beginTransaction()
-						.add(R.id.main_frameLayout, new RingWearerSetupFragment())
-						.commit();
+					FragmentHelper.addFragment(new RingWearerSetupFragment(), this);
 					break;
 				case WATCHER:
-					getSupportFragmentManager()
-						.beginTransaction()
-						.add(R.id.main_frameLayout, new WatcherSetupFragment())
-						.commit();
+					FragmentHelper.addFragment(new WatcherSetupFragment(), this);
 					break;
 				case NOT_SET:
-					getSupportFragmentManager()
-						.beginTransaction()
-						.add(R.id.main_frameLayout, new WelcomeFragment())
-						.commit();
+					FragmentHelper.addFragment(new WelcomeFragment(), this);
 					break;
 			}
 		}
 	}
 
 	public void onRechooseRole() {
-		getSupportFragmentManager()
-			.beginTransaction()
-			.replace(R.id.main_frameLayout, new WelcomeFragment())
-			.commit();
+		FragmentHelper.replaceFragment(new WelcomeFragment(), this);
 	}
 
 	public void onUserChooseToBePatient() {
-		getSupportFragmentManager()
-			.beginTransaction()
-			.replace(R.id.main_frameLayout, new RingWearerSetupFragment())
-			.addToBackStack(null)
-			.commit();
+		FragmentHelper.replaceFragment(new RingWearerSetupFragment(), true, this);
 	}
 
 	public void onUserChooseToBeWatcher() {
-		getSupportFragmentManager()
-			.beginTransaction()
-			.replace(R.id.main_frameLayout, new WatcherSetupFragment())
-			.addToBackStack(null)
-			.commit();
+		FragmentHelper.replaceFragment(new WatcherSetupFragment(), true, this);
 	}
 
 	public void onShowingPatientListFragment() {
-		getSupportFragmentManager()
-			.beginTransaction()
-			.replace(R.id.main_frameLayout, new SubscribedPatientListFragment())
-			.addToBackStack(null)
-			.commit();
+		FragmentHelper.replaceFragment(new SubscribedPatientListFragment(), true, this);
+	}
+
+	public void onShowRingWearerCollectInformationFragment() {
+		FragmentHelper.replaceFragment(new RingWearerCollectInformationFragment(), this);
+	}
+
+	public void onShowRingWearerSetupFragment() {
+		FragmentHelper.replaceFragment(new RingWearerSetupFragment(), this);
 	}
 
 	public static boolean isInForeGroundMode() {
