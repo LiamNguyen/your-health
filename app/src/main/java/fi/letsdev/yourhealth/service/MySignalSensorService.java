@@ -396,11 +396,11 @@ class MySignalSensorService implements
 
 					Integer bpm = Integer.parseInt(dataDict.get("1"));
 
-					if (!bpm.equals(0) && listener != null) listener.onReceiveHeartRate(bpm);
+					if (!bpm.equals(0) && listener != null && isDifferentFromCurrentBpm(bpm)) {
+						listener.onReceiveHeartRate(bpm);
+					}
 
 					if (isBpmEnterWarningRange(bpm) || isNewBpmCreateMuchDifferentThanCurrentBpm(bpm)) {
-						currentBpm = bpm;
-
 						broadcastIntent.putExtra(Constants.IntentExtras.BPM, currentBpm);
 						broadcastIntent.putExtra(Constants.IntentExtras.STEPS_PER_MINUTE, stepsPerMinute);
 						context.sendBroadcast(broadcastIntent);
@@ -418,6 +418,8 @@ class MySignalSensorService implements
 								context.getString(R.string.message_notification_ring_disconnected)
 							);
 					}
+
+					currentBpm = bpm;
 				}
 			}
 		} catch (Exception e) {
@@ -431,6 +433,10 @@ class MySignalSensorService implements
 
 	private boolean isNewBpmCreateMuchDifferentThanCurrentBpm(Integer bpm) {
 		return bpm < currentBpm - 3 || bpm > currentBpm + 3;
+	}
+
+	private boolean isDifferentFromCurrentBpm(Integer bpm) {
+		return !currentBpm.equals(bpm);
 	}
 
 	@Override

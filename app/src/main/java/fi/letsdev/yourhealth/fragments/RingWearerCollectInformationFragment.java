@@ -26,7 +26,6 @@ import fi.letsdev.yourhealth.utils.ViewHelper;
 public class RingWearerCollectInformationFragment extends Fragment implements InterfacePatientRepository {
 
 	private RelativeLayout progressBarLayout;
-	private ViewGroup mainLayout;
 	private EditText editTextName;
 	private Button btnSubmitNewPatient;
 	private PatientRepository patientRepository;
@@ -51,7 +50,7 @@ public class RingWearerCollectInformationFragment extends Fragment implements In
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mainLayout = view.findViewById(R.id.main_layout);
+		ViewGroup mainLayout = view.findViewById(R.id.main_layout);
 		progressBarLayout = new RelativeLayout(getContext());
 		ViewHelper.addProgressBar(progressBarLayout, mainLayout, getContext());
 
@@ -79,6 +78,7 @@ public class RingWearerCollectInformationFragment extends Fragment implements In
 			@Override
 			public void onClick(View view) {
 				progressBarLayout.setVisibility(View.VISIBLE);
+				btnSubmitNewPatient.setVisibility(View.INVISIBLE);
 				patientRepository.addPatient(
 					new Patient(
 						editTextName.getText().toString().trim(),
@@ -92,6 +92,7 @@ public class RingWearerCollectInformationFragment extends Fragment implements In
 	@Override
 	public void onAddPatient(Patient patient) {
 		progressBarLayout.setVisibility(View.INVISIBLE);
+		btnSubmitNewPatient.setVisibility(View.VISIBLE);
 
 		if (patient.isNull()) {
 			// Failed for some reason on server side

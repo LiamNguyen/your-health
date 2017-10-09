@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,26 +25,41 @@ import fi.letsdev.yourhealth.R;
 import fi.letsdev.yourhealth.View.PlayGifView;
 import fi.letsdev.yourhealth.interfaces.InterfaceMySignalSensorService;
 import fi.letsdev.yourhealth.interfaces.InterfaceRefresher;
+import fi.letsdev.yourhealth.model.Patient;
 import fi.letsdev.yourhealth.realtimenotificationhandler.OrtcHandler;
 import fi.letsdev.yourhealth.receiver.MySignalsDataReceiver;
 import fi.letsdev.yourhealth.service.BackgroundService;
 import fi.letsdev.yourhealth.utils.Constants;
+import fi.letsdev.yourhealth.utils.NotificationAlertManager;
 import fi.letsdev.yourhealth.utils.PreferencesManager;
 
 public class RingWearerSetupFragment extends Fragment implements InterfaceMySignalSensorService, InterfaceRefresher {
+
+	private final static String ARGUMENT_KEY = "ReconfirmResult";
 
 	private MySignalsDataReceiver mySignalsDataReceiver;
 	private IntentFilter ifilter;
 	private Boolean mBound = false;
 	private Intent serviceIntent;
 	private PlayGifView pGif;
-	private Integer bpm = 0;
+	private static Integer bpm = 0;
 	private Integer stepsPerMinute = 0;
-	private static Boolean shouldAlertEmergency = false; // Will be use as global variable within this fragment in void handleReceivedData()
+	private static Boolean shouldAlertEmergency = true;
 	private RelativeLayout relativeLayoutHeartrate;
 	private TextView txtBpm;
+	private Boolean hasChangedToRingWearerCollectInformationPage = false;
+	private NotificationAlertManager notificationAlertManager;
+	private Button btnStopAlert;
 
 	public RingWearerSetupFragment() {}
+
+	public static RingWearerSetupFragment newInstance(Boolean reconfirmResult) {
+		RingWearerSetupFragment fragment = new RingWearerSetupFragment();
+		Bundle args = new Bundle();
+		args.putSerializable(ARGUMENT_KEY, reconfirmResult);
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +76,8 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 			getActivity().bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
 			getActivity().startService(serviceIntent);
 		}
+
+		notificationAlertManager = NotificationAlertManager.getInstance(getContext());
 	}
 
 	@Override
@@ -84,6 +102,10 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 			getActivity().bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
 		}
 		getActivity().registerReceiver(mySignalsDataReceiver, ifilter);
+
+		// Get bundle argument
+		if (getArguments() != null)
+			shouldAlertEmergency = (Boolean) getArguments().getSerializable(ARGUMENT_KEY);
 	}
 
 	@Override
@@ -103,11 +125,26 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 		setHasOptionsMenu(true);
 
 		pGif = view.findViewById(R.id.viewGif);
-		pGif.setImageResource(R.drawable.scanning);
-		view.setBackgroundColor(Color.BLACK);
+
+		if (PreferencesManager.getInstance(getContext()).loadRingWearer().isNull() && !hasChangedToRingWearerCollectInformationPage) {
+			pGif.setImageResource(R.drawable.scanning);
+			view.setBackgroundColor(Color.BLACK);
+		}
+
 		relativeLayoutHeartrate = view.findViewById(R.id.relativeLayout_heartrate);
 		relativeLayoutHeartrate.setVisibility(View.INVISIBLE);
 		txtBpm = view.findViewById(R.id.txt_bpm);
+
+		btnStopAlert = view.findViewById(R.id.btn_stopAlert);
+		btnStopAlert.setVisibility(View.INVISIBLE);
+		btnStopAlert.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				notificationAlertManager.stopAlert();
+				btnStopAlert.setVisibility(View.INVISIBLE);
+				txtBpm.setTextColor(Color.GRAY);
+			}
+		});
 
 		return view;
 	}
@@ -122,16 +159,19 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_backToWelcome:
-				String ringWearerChannel =
+				Patient ringWearer =
 					PreferencesManager
 						.getInstance(getContext())
-						.loadRingWearer()
-						.getChannel();
+						.loadRingWearer();
+
+				if (!ringWearer.isNull()) {
+					OrtcHandler.getInstance().unsubscribeChannel(ringWearer.getChannel());
+					PreferencesManager.getInstance(getContext()).removeRingWearer();
+				}
+				hasChangedToRingWearerCollectInformationPage = false;
+				PreferencesManager.getInstance(getContext()).saveUserRole(Constants.UserRole.NOT_SET);
 
 				((MainActivity)getActivity()).onRechooseRole();
-				OrtcHandler.getInstance().unsubscribeChannel(ringWearerChannel);
-				PreferencesManager.getInstance(getContext()).removeRingWearer();
-				PreferencesManager.getInstance(getContext()).saveUserRole(Constants.UserRole.NOT_SET);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -156,18 +196,26 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	};
 
 	@Override
-	public void onReceiveHeartRate(Integer bpm) {
-		if (PreferencesManager.getInstance(getContext()).loadRingWearer().isNull())
-			((MainActivity) getActivity()).onShowRingWearerCollectInformationFragment();
+	public void onReceiveHeartRate(final Integer bpm) {
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (PreferencesManager.getInstance(getContext()).loadRingWearer().isNull() && !hasChangedToRingWearerCollectInformationPage) {
+					((MainActivity) getActivity()).onShowRingWearerCollectInformationFragment();
+					hasChangedToRingWearerCollectInformationPage = true;
+				} else {
+					pGif.setImageResource(R.drawable.heartbeat);
+				}
 
-		pGif.setImageResource(R.drawable.heartbeat);
-		if (getView() != null)
-			getView().setBackgroundColor(Color.WHITE);
-		relativeLayoutHeartrate.setVisibility(View.VISIBLE);
-		txtBpm.setText(String.valueOf(bpm));
+				if (getView() != null)
+					getView().setBackgroundColor(Color.WHITE);
+				relativeLayoutHeartrate.setVisibility(View.VISIBLE);
+				txtBpm.setText(String.valueOf(bpm));
 
-		this.bpm = bpm;
-		handleReceivedData();
+				RingWearerSetupFragment.bpm = bpm;
+				handleReceivedData();
+			}
+		});
 	}
 
 	@Override
@@ -183,12 +231,24 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	private void handleReceivedData() {
 		if (bpm > Constants.BPM_MAX) {
 			if (stepsPerMinute > Constants.STEPS_PER_MINUTE_MAX) {
-				// TODO: Transition to new fragment with question if user is running
+				((MainActivity) getActivity()).onShowReconfirmFragment(Constants.PredictedReason.RUNNING_FAST);
 			}
-			// TODO: Transition to new fragment with question if user is doing heavy lifting
+			((MainActivity) getActivity()).onShowReconfirmFragment(Constants.PredictedReason.HEAVY_LIFTING);
 		}
 	}
 
 	@Override
-	public void refreshData(String message) {}
+	public void refreshData(final String message) {
+		if (getActivity() == null) return;
+
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (message != null && message.equals(getString(R.string.emergency_notification_message))) {
+					btnStopAlert.setVisibility(View.VISIBLE);
+					txtBpm.setTextColor(Color.RED);
+				}
+			}
+		});
+	}
 }

@@ -20,6 +20,8 @@
     <string name="message_server_error">There was a server error. Please try again later</string>
     <string name="message_heartrate_title">Heart rate:</string>
     <string name="message_bpm_unit">BPM</string>
+    <string name="message_confirm_running">Are you running like hell?</string>
+    <string name="message_confirm_exercising">Are you doing gym like a bad ass :P</string>
 
     <!--NOTIFICATION_TITLES-->
     <string name="notification_title_information">Information</string>
@@ -32,9 +34,11 @@
     <string name="btn_stopAlert">Stop</string>
     <string name="btn_tryAgain">Try again</string>
     <string name="btn_continue">Continue</string>
+    <string name="btn_yes">Yes I am</string>
 
     <!--MENU ITEM TITLE-->
     <string name="menuItem_rechooseRole">Rechoose role</string>
+    <string name="number_ten">10</string>
 
     <!--PLACEHOLDERS-->
     <string name="placeHolder_patientCode">Patient\'s code</string>

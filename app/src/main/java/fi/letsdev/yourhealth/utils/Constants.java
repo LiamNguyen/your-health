@@ -49,4 +49,9 @@ public class Constants {
 			return this.role;
 		}
 	}
+
+	public enum PredictedReason {
+		RUNNING_FAST,
+		HEAVY_LIFTING
+	}
 }

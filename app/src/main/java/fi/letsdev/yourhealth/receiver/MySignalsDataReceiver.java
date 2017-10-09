@@ -22,7 +22,7 @@ public class MySignalsDataReceiver extends BroadcastReceiver {
 
 		if (ringWearerChannel == null) return;
 
-		if (RingWearerSetupFragment.shouldAlertEmergency()) {
+		if (bpm < Constants.BPM_MIN || RingWearerSetupFragment.shouldAlertEmergency()) {
 			if (bpm < Constants.BPM_MIN || bpm > Constants.BPM_MAX) {
 				OrtcHandler.getInstance().sendNotification(ringWearerChannel);
 			}

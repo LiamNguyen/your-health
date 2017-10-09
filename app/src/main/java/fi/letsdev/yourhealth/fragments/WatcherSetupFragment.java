@@ -142,9 +142,11 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 				((MainActivity)getContext()).onRechooseRole();
 				List<String> channels = preferencesManager.loadChannels();
 
-				for (String channel: channels) {
-					OrtcHandler.getInstance().unsubscribeChannel(channel);
-					preferencesManager.removeChannel(channel);
+				if (!channels.isEmpty()) {
+					for (String channel : channels) {
+						OrtcHandler.getInstance().unsubscribeChannel(channel);
+						preferencesManager.removeChannel(channel);
+					}
 				}
 
 				PreferencesManager.getInstance(getContext()).saveUserRole(Constants.UserRole.NOT_SET);

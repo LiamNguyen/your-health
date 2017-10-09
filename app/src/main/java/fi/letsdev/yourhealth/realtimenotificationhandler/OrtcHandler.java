@@ -55,10 +55,8 @@ public class OrtcHandler {
 	}
 
 	public void prepareClient(Context context, InterfaceRefresher rootView) {
-		if (selfHandler.context != null) return;
-
-		selfHandler.context = context;
 		selfHandler.rootView = rootView;
+		selfHandler.context = context;
 
 		Ortc api = new Ortc();
 		OrtcFactory factory;

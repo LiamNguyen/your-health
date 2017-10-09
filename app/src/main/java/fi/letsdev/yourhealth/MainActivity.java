@@ -4,6 +4,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import fi.letsdev.yourhealth.fragments.ReconfirmFragment;
 import fi.letsdev.yourhealth.fragments.RingWearerCollectInformationFragment;
 import fi.letsdev.yourhealth.fragments.RingWearerSetupFragment;
 import fi.letsdev.yourhealth.fragments.SubscribedPatientListFragment;
@@ -88,6 +89,14 @@ public class MainActivity extends FragmentActivity {
 
 	public void onShowRingWearerSetupFragment() {
 		FragmentHelper.replaceFragment(new RingWearerSetupFragment(), this);
+	}
+
+	public void onShowReconfirmFragment(Constants.PredictedReason predictedReason) {
+		FragmentHelper.replaceFragment(ReconfirmFragment.newInstance(predictedReason), true, this);
+	}
+
+	public void onReturnReconfirmResult(Boolean reconfirmResult) {
+		FragmentHelper.replaceFragment(RingWearerSetupFragment.newInstance(reconfirmResult), this);
 	}
 
 	public static boolean isInForeGroundMode() {
