@@ -37,7 +37,8 @@ public class RingWearerCollectInformationFragment extends Fragment implements In
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		patientRepository = PatientRepository.getInstance(this);
+		patientRepository = PatientRepository.getInstance();
+		patientRepository.setListener(this);
 	}
 
 	@Override

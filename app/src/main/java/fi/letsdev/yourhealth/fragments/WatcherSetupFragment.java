@@ -53,7 +53,8 @@ public class WatcherSetupFragment extends Fragment implements InterfaceRefresher
 
 		preferencesManager = PreferencesManager.getInstance(getContext());
 		notificationAlertManager = NotificationAlertManager.getInstance(getContext());
-		patientRepository = PatientRepository.getInstance(this);
+		patientRepository = PatientRepository.getInstance();
+		patientRepository.setListener(this);
 	}
 
 	@Override

@@ -14,14 +14,13 @@ public class PatientRepository {
 
 	private static PatientRepository instance = null;
 
-	private PatientRepository(InterfacePatientRepository listener) {
+	private PatientRepository() {
 		mService = ApiUtils.getPatientService();
-		this.listener = listener;
 	}
 
-	public static PatientRepository getInstance(InterfacePatientRepository listener) {
+	public static PatientRepository getInstance() {
 		if (instance == null) {
-			instance = new PatientRepository(listener);
+			instance = new PatientRepository();
 		}
 		return instance;
 	}
@@ -61,5 +60,9 @@ public class PatientRepository {
 
 			}
 		});
+	}
+
+	public void setListener(InterfacePatientRepository listener) {
+		this.listener = listener;
 	}
 }
