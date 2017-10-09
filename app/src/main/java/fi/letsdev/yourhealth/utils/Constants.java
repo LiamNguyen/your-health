@@ -28,9 +28,9 @@ public class Constants {
 		public static String SERVICE_STATE = "Bluetooth service state";
 	}
 
-	public static Integer BPM_MAX = 150;
+	public static Integer BPM_MAX = 70;
 
-	public static Integer BPM_MIN = 50;
+	public static Integer BPM_MIN = 69;
 
 	public static Integer STEPS_PER_MINUTE_MAX = 250;
 

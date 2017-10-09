@@ -22,6 +22,8 @@
     <string name="message_bpm_unit">BPM</string>
     <string name="message_confirm_running">Are you running like hell?</string>
     <string name="message_confirm_exercising">Are you doing gym like a bad ass :P</string>
+    <string name="message_Bpm">Bpm</string>
+    <string name="message_Spm">Spm</string>
 
     <!--NOTIFICATION_TITLES-->
     <string name="notification_title_information">Information</string>
@@ -39,6 +41,7 @@
     <!--MENU ITEM TITLE-->
     <string name="menuItem_rechooseRole">Rechoose role</string>
     <string name="number_ten">10</string>
+    <string name="number_zero">0</string>
 
     <!--PLACEHOLDERS-->
     <string name="placeHolder_patientCode">Patient\'s code</string>

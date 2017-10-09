@@ -39,4 +39,12 @@ public class BackgroundService extends Service {
 	public void setListener(InterfaceMySignalSensorService listener) {
 		mySignalSensorService.setListener(listener);
 	}
+
+	public void setEmulateBpm(Integer bpm) {
+		mySignalSensorService.setEmulateBpm(bpm);
+	}
+
+	public void setEmulateSpm(Integer spm) {
+		mySignalSensorService.setEmulateSpm(spm);
+	}
 }

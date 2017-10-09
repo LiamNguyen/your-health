@@ -7,9 +7,12 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,6 +54,8 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	private Boolean hasChangedToRingWearerCollectInformationPage = false;
 	private NotificationAlertManager notificationAlertManager;
 	private Button btnStopAlert;
+	private BackgroundService mService;
+	private static boolean handlerShouldNotWork;
 
 	public RingWearerSetupFragment() {}
 
@@ -58,6 +64,9 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 		Bundle args = new Bundle();
 		args.putSerializable(ARGUMENT_KEY, reconfirmResult);
 		fragment.setArguments(args);
+
+		deactivateHandler();
+
 		return fragment;
 	}
 
@@ -146,6 +155,34 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 			}
 		});
 
+		final EditText editTextBpm = view.findViewById(R.id.editText_emulate_bpm);
+		editTextBpm.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				mService.setEmulateBpm(Integer.parseInt(editTextBpm.getText().toString()));
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {}
+		});
+
+		final EditText editTextSpm = view.findViewById(R.id.editText_emulate_spm);
+		editTextSpm.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				mService.setEmulateSpm(Integer.parseInt(editTextSpm.getText().toString()));
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {}
+		});
+
 		return view;
 	}
 
@@ -185,7 +222,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 			BackgroundService.LocalBinder binder =
 				(BackgroundService.LocalBinder) iBinder;
-			BackgroundService mService = binder.getInstance();
+			mService = binder.getInstance();
 			mService.setListener(RingWearerSetupFragment.this);
 		}
 
@@ -229,6 +266,8 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	}
 
 	private void handleReceivedData() {
+		if (handlerShouldNotWork) return;
+
 		if (bpm > Constants.BPM_MAX) {
 			if (stepsPerMinute > Constants.STEPS_PER_MINUTE_MAX) {
 				((MainActivity) getActivity()).onShowReconfirmFragment(Constants.PredictedReason.RUNNING_FAST);
@@ -250,5 +289,20 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 				}
 			}
 		});
+	}
+
+	private static void activateHandler() {
+		handlerShouldNotWork = false;
+	}
+
+	private static void deactivateHandler() {
+		handlerShouldNotWork = true;
+		new CountDownTimer(3600000, 1000) {
+			public void onTick(long millisUntilFinished) {}
+
+			public void onFinish() {
+				activateHandler();
+			}
+		}.start();
 	}
 }

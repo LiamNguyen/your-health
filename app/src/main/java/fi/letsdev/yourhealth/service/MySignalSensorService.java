@@ -87,6 +87,9 @@ class MySignalSensorService implements
 	private Integer bpmEqualZeroCounter = 0;
 	private Integer stepsPerMinute = 0;
 
+	private Integer emulatedBpm = 0;
+	private Integer emulatedSpm = 0;
+
 	void startService() {
 		scanBluetoothDevices();
 		createInterface();
@@ -377,6 +380,14 @@ class MySignalSensorService implements
 		mock(20);
 	}
 
+	void setEmulateBpm(Integer bpm) {
+			this.emulatedBpm = bpm;
+	}
+
+	void setEmulateSpm(Integer spm) {
+		this.emulatedSpm = spm;
+	}
+
 	// Receive data from MySignals sensors and broadcast if there are changes
 
 	private void readCharacteristic(BluetoothGattCharacteristic characteristic) {
@@ -395,6 +406,10 @@ class MySignalSensorService implements
 					Log.d(TAG, "kUUIDPulsiOximeterSensor dict: " + dataDict.get("1"));
 
 					Integer bpm = Integer.parseInt(dataDict.get("1"));
+
+					// Emulated in action. Only affects when non-zero value is passed in
+					if (!this.emulatedBpm.equals(0))
+						bpm = this.emulatedBpm;
 
 					if (!bpm.equals(0) && listener != null && isDifferentFromCurrentBpm(bpm)) {
 						listener.onReceiveHeartRate(bpm);
@@ -441,13 +456,17 @@ class MySignalSensorService implements
 
 	@Override
 	public void onReceiveStepsPerMinute(Integer stepsPerMinute) {
+		// Emulated in actions. Only affects when non-zero value is passed in
+		if (!this.emulatedSpm.equals(0))
+			stepsPerMinute = this.emulatedSpm;
+
 		this.stepsPerMinute = stepsPerMinute;
 		listener.onReceiveStepsPerMinute(stepsPerMinute);
 	}
 
 	//Mock
 	private void mock(Integer mockBpm) {
-		listener.onReceiveHeartRate(mockBpm);
+		listener.onReceiveHeartRate(this.emulatedBpm);
 		broadcastIntent.putExtra(Constants.IntentExtras.BPM, mockBpm);
 		context.sendBroadcast(broadcastIntent);
 	}

@@ -12,6 +12,15 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
 
+    <Button
+        android:id="@+id/btn_stopAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="@string/btn_stopAlert"/>
+
     <RelativeLayout
         android:id="@+id/relativeLayout_heartrate"
         android:layout_width="wrap_content"
@@ -53,14 +62,49 @@
 
     </RelativeLayout>
 
-
-    <Button
-        android:id="@+id/btn_stopAlert"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@id/btn_stopAlert"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:text="@string/btn_stopAlert"/>
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:id="@+id/txt_bpm_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/message_Bpm"/>
+
+        <EditText
+            android:id="@+id/editText_emulate_bpm"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/txt_bpm_title"
+            android:layout_alignBaseline="@id/txt_bpm_title"
+            android:layout_marginStart="20dp"
+            android:textAlignment="center"
+            android:hint="@string/number_zero"/>
+
+        <TextView
+            android:id="@+id/txt_spm_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_bpm_title"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:hint="@string/message_Spm"/>
+
+        <EditText
+            android:id="@+id/editText_emulate_spm"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/txt_spm_title"
+            android:layout_below="@id/editText_emulate_bpm"
+            android:layout_marginStart="20dp"
+            android:textAlignment="center"
+            android:hint="@string/number_zero"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
