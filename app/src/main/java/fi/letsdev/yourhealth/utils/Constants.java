@@ -20,9 +20,7 @@ public class Constants {
 
 	public static String MYSIGNALS_ID = "mysignals 000065";
 
-//	static String API_URL = "http://10.112.204.134:5000/api/";
-
-		static String API_URL = "http://192.168.20.106:5000/api/";
+	static String API_URL = "http://10.0.2.2:5000/api/";
 
 	static String NOTIFICATION_CHANNEL_NAME = "Main channel";
 
