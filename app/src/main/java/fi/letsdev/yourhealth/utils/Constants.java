@@ -20,7 +20,7 @@ public class Constants {
 
 	public static String MYSIGNALS_ID = "mysignals 000065";
 
-	static String API_URL = "http://10.0.2.2:5000/api/";
+	static String API_URL = "http://10.112.200.208:5000/api/";
 
 	static String NOTIFICATION_CHANNEL_NAME = "Main channel";
 
@@ -28,9 +28,9 @@ public class Constants {
 		public static String SERVICE_STATE = "Bluetooth service state";
 	}
 
-	public static Integer BPM_MAX = 70;
+	public static Integer BPM_MAX = 150;
 
-	public static Integer BPM_MIN = 69;
+	public static Integer BPM_MIN = 50;
 
 	public static Integer STEPS_PER_MINUTE_MAX = 250;
 

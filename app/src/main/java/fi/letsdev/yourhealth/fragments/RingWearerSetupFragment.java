@@ -40,6 +40,7 @@ import fi.letsdev.yourhealth.utils.PreferencesManager;
 public class RingWearerSetupFragment extends Fragment implements InterfaceMySignalSensorService, InterfaceRefresher {
 
 	private final static String ARGUMENT_KEY = "ReconfirmResult";
+	private static CountDownTimer countdownTimer;
 
 	private MySignalsDataReceiver mySignalsDataReceiver;
 	private IntentFilter ifilter;
@@ -48,7 +49,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	private PlayGifView pGif;
 	private static Integer bpm = 0;
 	private Integer stepsPerMinute = 0;
-	private static Boolean shouldAlertEmergency = true;
+	private static Boolean shouldAlertEmergency = false;
 	private RelativeLayout relativeLayoutHeartrate;
 	private TextView txtBpm;
 	private Boolean hasChangedToRingWearerCollectInformationPage = false;
@@ -56,6 +57,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 	private Button btnStopAlert;
 	private BackgroundService mService;
 	private static boolean handlerShouldNotWork;
+	private RelativeLayout relativeLayoutEmulate;
 
 	public RingWearerSetupFragment() {}
 
@@ -125,6 +127,8 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 			getActivity().unbindService(mConnection);
 			mBound = false;
 		}
+		if (countdownTimer != null)
+			countdownTimer.cancel();
 	}
 
 	@Override
@@ -135,14 +139,17 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 		pGif = view.findViewById(R.id.viewGif);
 
-		if (PreferencesManager.getInstance(getContext()).loadRingWearer().isNull() && !hasChangedToRingWearerCollectInformationPage) {
+//		if (PreferencesManager.getInstance(getContext()).loadRingWearer().isNull() && !hasChangedToRingWearerCollectInformationPage) {
 			pGif.setImageResource(R.drawable.scanning);
 			view.setBackgroundColor(Color.BLACK);
-		}
+//		}
 
 		relativeLayoutHeartrate = view.findViewById(R.id.relativeLayout_heartrate);
 		relativeLayoutHeartrate.setVisibility(View.INVISIBLE);
 		txtBpm = view.findViewById(R.id.txt_bpm);
+
+		relativeLayoutEmulate = view.findViewById(R.id.relativeLayout_emulate);
+		relativeLayoutEmulate.setVisibility(View.INVISIBLE);
 
 		btnStopAlert = view.findViewById(R.id.btn_stopAlert);
 		btnStopAlert.setVisibility(View.INVISIBLE);
@@ -162,6 +169,8 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				if (editTextBpm.getText().toString().isEmpty())
+					editTextBpm.setText("0");
 				mService.setEmulateBpm(Integer.parseInt(editTextBpm.getText().toString()));
 			}
 
@@ -176,6 +185,8 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				if (editTextSpm.getText().toString().isEmpty())
+					editTextSpm.setText("0");
 				mService.setEmulateSpm(Integer.parseInt(editTextSpm.getText().toString()));
 			}
 
@@ -246,8 +257,13 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 				if (getView() != null)
 					getView().setBackgroundColor(Color.WHITE);
-				relativeLayoutHeartrate.setVisibility(View.VISIBLE);
+
+				if (relativeLayoutHeartrate.getVisibility() == View.INVISIBLE)
+					relativeLayoutHeartrate.setVisibility(View.VISIBLE);
 				txtBpm.setText(String.valueOf(bpm));
+
+				if (relativeLayoutEmulate.getVisibility() == View.INVISIBLE)
+					relativeLayoutEmulate.setVisibility(View.VISIBLE);
 
 				RingWearerSetupFragment.bpm = bpm;
 				handleReceivedData();
@@ -267,6 +283,10 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 	private void handleReceivedData() {
 		if (handlerShouldNotWork) return;
+
+		if (PreferencesManager.getInstance(getContext()).loadRingWearer().isNull() && !hasChangedToRingWearerCollectInformationPage) {
+			return;
+		}
 
 		if (bpm > Constants.BPM_MAX) {
 			if (stepsPerMinute > Constants.STEPS_PER_MINUTE_MAX) {
@@ -297,7 +317,7 @@ public class RingWearerSetupFragment extends Fragment implements InterfaceMySign
 
 	private static void deactivateHandler() {
 		handlerShouldNotWork = true;
-		new CountDownTimer(3600000, 1000) {
+		countdownTimer = new CountDownTimer(3600000, 1000) {
 			public void onTick(long millisUntilFinished) {}
 
 			public void onFinish() {

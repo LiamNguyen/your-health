@@ -377,7 +377,7 @@ class MySignalSensorService implements
 
 	void setListener(InterfaceMySignalSensorService listener) {
 		this.listener = listener;
-		mock(20);
+		mock(130);
 	}
 
 	void setEmulateBpm(Integer bpm) {
@@ -416,7 +416,7 @@ class MySignalSensorService implements
 					}
 
 					if (isBpmEnterWarningRange(bpm) || isNewBpmCreateMuchDifferentThanCurrentBpm(bpm)) {
-						broadcastIntent.putExtra(Constants.IntentExtras.BPM, currentBpm);
+						broadcastIntent.putExtra(Constants.IntentExtras.BPM, bpm);
 						broadcastIntent.putExtra(Constants.IntentExtras.STEPS_PER_MINUTE, stepsPerMinute);
 						context.sendBroadcast(broadcastIntent);
 					}
@@ -443,7 +443,7 @@ class MySignalSensorService implements
 	}
 
 	private boolean isBpmEnterWarningRange(Integer bpm) {
-		return bpm < 30 || bpm > 140;
+		return !bpm.equals(0) && (bpm < 30 || bpm > 140);
 	}
 
 	private boolean isNewBpmCreateMuchDifferentThanCurrentBpm(Integer bpm) {
@@ -461,7 +461,8 @@ class MySignalSensorService implements
 			stepsPerMinute = this.emulatedSpm;
 
 		this.stepsPerMinute = stepsPerMinute;
-		listener.onReceiveStepsPerMinute(stepsPerMinute);
+		if (listener != null)
+			listener.onReceiveStepsPerMinute(stepsPerMinute);
 	}
 
 	//Mock

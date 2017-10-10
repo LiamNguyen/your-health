@@ -4,37 +4,37 @@
              android:layout_height="match_parent"
              tools:context="fi.letsdev.yourhealth.fragments.ReconfirmFragment">
 
-    <fi.letsdev.yourhealth.View.PlayGifView
-        android:id="@+id/viewGif"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
-
-    <TextView
-        android:id="@+id/txt_question"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/viewGif"
-        android:layout_marginBottom="80dp"
-        android:layout_centerHorizontal="true"
-        android:textSize="23sp"
-        android:textStyle="bold"
-        android:text="@string/message_confirm_running"/>
-
     <TextView
         android:id="@+id/txt_countdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
         android:textAlignment="center"
         android:textColor="@android:color/holo_green_dark"
         android:textSize="70sp"
         android:textStyle="bold"
         android:text="@string/number_ten"
-        android:layout_above="@+id/txt_question"
         android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/txt_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_below="@id/txt_countdown"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:text="@string/message_confirm_running"/>
+
+    <fi.letsdev.yourhealth.View.PlayGifView
+        android:id="@+id/viewGif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/txt_question"/>
 
     <Button
         android:id="@+id/btn_yes"

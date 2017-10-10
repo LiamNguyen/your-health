@@ -63,6 +63,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout_emulate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/btn_stopAlert"
@@ -84,6 +85,7 @@
             android:layout_alignBaseline="@id/txt_bpm_title"
             android:layout_marginStart="20dp"
             android:textAlignment="center"
+            android:inputType="number"
             android:hint="@string/number_zero"/>
 
         <TextView
@@ -103,6 +105,7 @@
             android:layout_below="@id/editText_emulate_bpm"
             android:layout_marginStart="20dp"
             android:textAlignment="center"
+            android:inputType="number"
             android:hint="@string/number_zero"/>
 
     </RelativeLayout>
